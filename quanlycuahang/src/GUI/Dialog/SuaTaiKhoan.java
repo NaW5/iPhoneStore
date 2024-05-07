@@ -27,7 +27,7 @@ public class SuaTaiKhoan extends JDialog {
     private JTextField jTxt_tenDangNhap;
     private JTextField jTxt_matKhau;
     private JTextField jTxt_chucVu;
-    private TaiKhoanBUS tk;
+    private TaiKhoanBUS tkBUS;
     private int idNv;
 
     /**
@@ -37,7 +37,7 @@ public class SuaTaiKhoan extends JDialog {
 
     public SuaTaiKhoan() {
 
-        tk =  new TaiKhoanBUS();
+        tkBUS =  new TaiKhoanBUS();
         setTitle("Sửa Tài Khoản");
         setBounds(100, 100, 507, 590);
         getContentPane().setLayout(new BorderLayout());
@@ -122,7 +122,7 @@ public class SuaTaiKhoan extends JDialog {
                     tkdto.setTrangThai(1);
 
                     // Update the database
-                    int result = TaiKhoanDAO.getInstance().update(tkdto);
+                    int result = tkBUS.update(tkdto);
                     if(result > 0){
                         JOptionPane.showMessageDialog(null, "Sửa nhân viên thành công!");
 

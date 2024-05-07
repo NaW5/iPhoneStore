@@ -32,18 +32,18 @@ public class Test extends JFrame {
         setContentPane(panel);
         panel.setLayout(null);
 
-//        NhanVien nhanVienPanel = new NhanVien();
-//        nhanVienPanel.setBounds(50, 100, 800, 700); // Increase the size of the NhanVien panel
-//        nhanVienPanel.setOpaque(false); // Make the panel transparent
-//        panel.add(nhanVienPanel); // Add the panel to the contentPane
-//        setLocationRelativeTo(null); // Center the JFrame on the screen
-//        setVisible(true);
-        TaiKhoan taiKhoanPanel = new TaiKhoan();
-        taiKhoanPanel.setBounds(50, 100, 800, 700); // Increase the size of the NhanVien panel
-        taiKhoanPanel.setOpaque(false); // Make the panel transparent
-        panel.add(taiKhoanPanel); // Add the panel to the contentPane
+        NhanVien nhanVienPanel = new NhanVien();
+        nhanVienPanel.setBounds(50, 100, 800, 700); // Increase the size of the NhanVien panel
+        nhanVienPanel.setOpaque(false); // Make the panel transparent
+        panel.add(nhanVienPanel); // Add the panel to the contentPane
         setLocationRelativeTo(null); // Center the JFrame on the screen
         setVisible(true);
+//        TaiKhoan taiKhoanPanel = new TaiKhoan();
+//        taiKhoanPanel.setBounds(50, 100, 800, 700); // Increase the size of the NhanVien panel
+//        taiKhoanPanel.setOpaque(false); // Make the panel transparent
+//        panel.add(taiKhoanPanel); // Add the panel to the contentPane
+//        setLocationRelativeTo(null); // Center the JFrame on the screen
+//        setVisible(true);
     }
 
 }

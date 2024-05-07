@@ -27,7 +27,7 @@ public class SuaNhanVien extends JDialog {
     private JTextField jTxt_sdt;
     private ButtonGroup buttonGroup;
     private JTextField jTxt_ngaySinh;
-    private NhanVienBUS nv ;
+    private NhanVienBUS nvBUS ;
     private int idNv;
 
     /**
@@ -37,7 +37,7 @@ public class SuaNhanVien extends JDialog {
 
     public SuaNhanVien() {
 
-        nv =  new NhanVienBUS();
+        nvBUS =  new NhanVienBUS();
         setTitle("Sửa Nhân Viên");
         setBounds(100, 100, 507, 590);
         getContentPane().setLayout(new BorderLayout());
@@ -147,7 +147,8 @@ public class SuaNhanVien extends JDialog {
                         nvdto.setIsDelete(1); // Set isDelete to 1
 
                         // Update the database
-                        int result = NhanVienDAO.getInstance().update(nvdto);
+
+                        int result = nvBUS.update(nvdto);
                         if(result > 0){
                             JOptionPane.showMessageDialog(null, "Sửa nhân viên thành công!");
 
@@ -177,7 +178,8 @@ public class SuaNhanVien extends JDialog {
     public SuaNhanVien(int idNv){
         this(); // Call the no-argument constructor to initialize the GUI components
         this.idNv= idNv;
-        NhanVienDTO nhanVienDTO = NhanVienDAO.getInstance().selectById(idNv );
+
+        NhanVienDTO nhanVienDTO = nvBUS.selectById(idNv );
 
         // Set the text fields with the existing data
         jTxt_hoTen.setText(nhanVienDTO.getHoTen());

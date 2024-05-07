@@ -2,7 +2,6 @@ package GUI.Dialog;
 
 import BUS.NhanVienBUS;
 import DTO.NhanVienDTO;
-import GUI.Panel.NhanVien;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
@@ -135,8 +134,8 @@ public class ThemNhanVien extends JDialog {
                     nvdto.setNgaySinh(sqlDate);
                     //thêm nhân viên vào csdl
                     nvBus =  new NhanVienBUS();
-                    boolean kq = nvBus.addd(nvdto);
-                    if(kq){
+                    int kq = nvBus.insert(nvdto);
+                    if(kq >0){
                         JOptionPane.showMessageDialog(null, "Thêm nhân viên thành công!");
                     }else{
                         JOptionPane.showMessageDialog(null, "Thêm nhân viên thất bại!");

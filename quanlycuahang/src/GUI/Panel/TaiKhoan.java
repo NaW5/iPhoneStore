@@ -1,7 +1,7 @@
 package GUI.Panel;
 
 
-
+import BUS.TaiKhoanBUS;
 import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
 import GUI.Dialog.SuaNhanVien;
@@ -19,7 +19,8 @@ public class TaiKhoan extends JPanel {
     private static final long serialVersionUID = 1L;
     private JTable table_Tk;
     DefaultTableModel tblModel;
-    public TaiKhoanDAO tkDAO = new TaiKhoanDAO();
+    public TaiKhoanBUS tkBUS = new TaiKhoanBUS();
+
     private JTextField jTxt_timKiem;
 
 
@@ -54,7 +55,6 @@ public class TaiKhoan extends JPanel {
                     String chucVu = (String) model.getValueAt(row, 3);
                     int idNv = (int) model.getValueAt(row, 4);
                     SuaTaiKhoan suaTaiKhoan = new SuaTaiKhoan(idNv, tenDangNhap, matKhau, chucVu);
-
                     suaTaiKhoan.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần sửa");
@@ -73,7 +73,7 @@ public class TaiKhoan extends JPanel {
                     int confirm = JOptionPane.showConfirmDialog(null, "Bạn chắc chắn muốn xóa tài khoản của nhân viên có ID: " + idNv + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         // Update the isVisible status of the employee to 0 instead of deleting
-                        TaiKhoanDAO.getInstance().delete(idNv);
+                        tkBUS.delete(idNv);
                         loadDataTable();
                     }
                 }else{
@@ -104,21 +104,43 @@ public class TaiKhoan extends JPanel {
 
 
     }
-    public void loadDataTable(){
-        ArrayList<TaiKhoanDTO> dsnv = tkDAO.selectAll();
-        tblModel.setRowCount(0);
-        for(TaiKhoanDTO tk : dsnv){
-            tblModel.addRow(new Object[]{
-                    tk.getUseName(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
-            });
-        }
+//    public void loadDataTable(){
+//        ArrayList<TaiKhoanDTO> dsnv = tkDAO.selectAll();
+//        tblModel.setRowCount(0);
+//        for(TaiKhoanDTO tk : dsnv){
+//            tblModel.addRow(new Object[]{
+//                    tk.getUseName(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
+//            });
+//        }
+//    }
+//    public void timKiemNhanVien(){
+//        String key = jTxt_timKiem.getText().trim();
+//        if(key.isEmpty()){
+//            loadDataTable();
+//        }else {
+//            ArrayList<TaiKhoanDTO> dsnv = tkDAO.search(key);
+//            tblModel.setRowCount(0);
+//            for(TaiKhoanDTO nv : dsnv) {
+//                tblModel.addRow(new Object[]{
+//                        nv.getUseName(), nv.getMatKhau(), nv.getTrangThai(), nv.getChucVu(), nv.getNHANVIEN_idNV()});
+//            }
+//        }
+//    }
+public void loadDataTable(){
+    ArrayList<TaiKhoanDTO> dsnv = tkBUS.selectAll();
+    tblModel.setRowCount(0);
+    for(TaiKhoanDTO tk : dsnv){
+        tblModel.addRow(new Object[]{
+                tk.getUseName(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
+        });
     }
+}
     public void timKiemNhanVien(){
         String key = jTxt_timKiem.getText().trim();
         if(key.isEmpty()){
             loadDataTable();
         }else {
-            ArrayList<TaiKhoanDTO> dsnv = tkDAO.search(key);
+            ArrayList<TaiKhoanDTO> dsnv = tkBUS.search(key);
             tblModel.setRowCount(0);
             for(TaiKhoanDTO nv : dsnv) {
                 tblModel.addRow(new Object[]{

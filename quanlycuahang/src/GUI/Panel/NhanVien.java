@@ -21,7 +21,7 @@ public class NhanVien extends JPanel {
     DefaultTableModel tblModel;
     public NhanVienDAO nvDAO = new NhanVienDAO();
     private JTextField jTxt_timKiem;
-
+    public NhanVienBUS nvBUS = new NhanVienBUS();
 
     public NhanVien() {
         setLayout(new BorderLayout());
@@ -79,7 +79,7 @@ public class NhanVien extends JPanel {
                     int confirm = JOptionPane.showConfirmDialog(null, "Bạn chắc chắn muốn xóa nhân viên có ID: " + idNv + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         // Update the isVisible status of the employee to 0 instead of deleting
-                        NhanVienDAO.getInstance().delete(idNv);
+                        nvBUS.delete(idNv);
                         loadDataTable();
                     }
                 }else{
@@ -111,7 +111,7 @@ public class NhanVien extends JPanel {
 
     }
     public void loadDataTable(){
-        ArrayList<NhanVienDTO> dsnv = nvDAO.selectAll();
+        ArrayList<NhanVienDTO> dsnv = nvBUS.selectAll();
         tblModel.setRowCount(0);
         for(NhanVienDTO nv : dsnv){
             tblModel.addRow(new Object[]{
@@ -124,7 +124,7 @@ public class NhanVien extends JPanel {
         if(key.isEmpty()){
             loadDataTable();
         }else {
-            ArrayList<NhanVienDTO> dsnv = nvDAO.search(key);
+            ArrayList<NhanVienDTO> dsnv = nvBUS.search(key);
             tblModel.setRowCount(0);
             for(NhanVienDTO nv : dsnv) {
                 tblModel.addRow(new Object[]{
