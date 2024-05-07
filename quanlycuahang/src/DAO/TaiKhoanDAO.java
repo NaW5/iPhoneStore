@@ -24,7 +24,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             if(con == null){
                 String sql = "insert into taikhoan( tenDangNhap, matKhau, chucVu, trangThai, NHANVIEN_idNV) values(?, ?, ?, 1, ?)";
                 PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-                ps.setString(1, taiKhoanDTO.getTenDangNhap());
+                ps.setString(1, taiKhoanDTO.getUseName());
                 ps.setString(2, taiKhoanDTO.getMatKhau());
                 ps.setString(3, taiKhoanDTO.getChucVu());
                 ps.setInt(4, taiKhoanDTO.getNHANVIEN_idNV());
@@ -50,7 +50,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             Connection con = JDBCUtil.getConnection();
             String sql = "update taikhoan set userName = ?, matKhau = ?, trangThai = ?, chucVu = ? where NHANVIEN_idNV = ?";
             PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-            ps.setString(1, taiKhoanDTO.getTenDangNhap());
+            ps.setString(1, taiKhoanDTO.getUseName());
             ps.setString(2, taiKhoanDTO.getMatKhau());
             ps.setInt(3, taiKhoanDTO.getTrangThai());
             ps.setString(4, taiKhoanDTO.getChucVu());
@@ -107,7 +107,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TaiKhoanDTO taiKhoan = new TaiKhoanDTO();
-                taiKhoan.setTenDangNhap(rs.getString("userName"));
+                taiKhoan.setUseName(rs.getString("userName"));
                 taiKhoan.setMatKhau(rs.getString("matKhau"));
                         taiKhoan.setChucVu(rs.getString("chucVu"));
                         taiKhoan.setTrangThai(rs.getInt("trangThai"));
@@ -176,14 +176,14 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
         ArrayList<TaiKhoanDTO> taiKhoanList = new ArrayList<>();
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "SELECT * FROM taikhoan WHERE tenDangNhap LIKE ?";
+            String sql = "SELECT * FROM taikhoan WHERE userName LIKE ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, "%" + keyword + "%");
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(
-                        rs.getInt("id_nhanVien"),
-                        rs.getString("tenDangNhap"),
+                        rs.getInt("NHANVIEN_idNV"),
+                        rs.getString("userName"),
                         rs.getString("matKhau"),
                         rs.getString("chucVu"),
                         rs.getInt("trangThai")

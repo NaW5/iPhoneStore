@@ -109,7 +109,7 @@ public class TaiKhoan extends JPanel {
         tblModel.setRowCount(0);
         for(TaiKhoanDTO tk : dsnv){
             tblModel.addRow(new Object[]{
-                    tk.getTenDangNhap(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
+                    tk.getUseName(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
             });
         }
     }
@@ -122,7 +122,7 @@ public class TaiKhoan extends JPanel {
             tblModel.setRowCount(0);
             for(TaiKhoanDTO nv : dsnv) {
                 tblModel.addRow(new Object[]{
-                        nv.getTenDangNhap(), nv.getMatKhau(), nv.getTrangThai(), nv.getChucVu(), nv.getNHANVIEN_idNV()});
+                        nv.getUseName(), nv.getMatKhau(), nv.getTrangThai(), nv.getChucVu(), nv.getNHANVIEN_idNV()});
             }
         }
     }

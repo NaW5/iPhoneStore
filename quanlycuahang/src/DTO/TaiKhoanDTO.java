@@ -2,7 +2,7 @@ package DTO;
 import java.util.Objects;
 public class TaiKhoanDTO {
     private int NHANVIEN_idNV;
-    private String tenDangNhap;
+    private String useName;
     private String matKhau;
     private String chucVu;
     private int trangThai;
@@ -11,9 +11,9 @@ public class TaiKhoanDTO {
 
     }
 
-    public TaiKhoanDTO(int NHANVIEN_idNV, String tenDangNhap, String matKhau, String chucVu, int trangThai) {
+    public TaiKhoanDTO(int NHANVIEN_idNV, String userName, String matKhau, String chucVu, int trangThai) {
         this.NHANVIEN_idNV = NHANVIEN_idNV;
-        this.tenDangNhap = tenDangNhap;
+        this.useName = userName;
         this.matKhau = matKhau;
         this.chucVu = chucVu;
         this.trangThai = trangThai;
@@ -27,12 +27,12 @@ public class TaiKhoanDTO {
         return NHANVIEN_idNV;
     }
 
-    public void setTenDangNhap(String tenDangNhap) {
-        this.tenDangNhap = tenDangNhap;
+    public void setUseName(String useName) {
+        this.useName = useName;
     }
 
-    public String getTenDangNhap() {
-        return tenDangNhap;
+    public String getUseName() {
+        return useName;
     }
 
     public void setMatKhau(String matKhau) {
@@ -63,7 +63,7 @@ public class TaiKhoanDTO {
     public int hashCode() {
         int hash = 3;
         hash = 19 * hash + this.NHANVIEN_idNV;
-        hash = 19 * hash + Objects.hashCode(this.tenDangNhap);
+        hash = 19 * hash + Objects.hashCode(this.useName);
         hash = 19 * hash + Objects.hashCode(this.matKhau);
         hash = 19 * hash + Objects.hashCode(this.chucVu);
         hash = 19 * hash + this.trangThai;
@@ -91,13 +91,13 @@ public class TaiKhoanDTO {
         if (this.trangThai != other.trangThai) {
             return false;
         }
-        if(!Objects.equals(this.tenDangNhap, other.tenDangNhap)) {
+        if(!Objects.equals(this.useName, other.useName)) {
             return false;
         }
         return Objects.equals(this.matKhau, other.matKhau);
     }
     @Override
     public String toString() {
-        return "ID nhân viên: " + NHANVIEN_idNV + ", Tên đăng nhập: " + tenDangNhap + ", Mật khẩu: " + matKhau + ", Chức vụ: " + chucVu + ", Trạng thái: " + trangThai;
+        return "ID nhân viên: " + NHANVIEN_idNV + ", Tên đăng nhập: " + useName + ", Mật khẩu: " + matKhau + ", Chức vụ: " + chucVu + ", Trạng thái: " + trangThai;
     }
 }
