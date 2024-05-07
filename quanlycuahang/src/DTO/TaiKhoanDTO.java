@@ -19,11 +19,11 @@ public class TaiKhoanDTO {
         this.trangThai = trangThai;
     }
 
-    public void setId_nhanVien(int id_nhanVien) {
-        this.NHANVIEN_idNV = id_nhanVien;
+    public void setNHANVIEN_idNV(int NHANVIEN_idNV) {
+        this.NHANVIEN_idNV = NHANVIEN_idNV;
     }
 
-    public int getId_nhanVien() {
+    public int getNHANVIEN_idNV() {
         return NHANVIEN_idNV;
     }
 

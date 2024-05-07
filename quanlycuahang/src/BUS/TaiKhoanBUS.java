@@ -21,7 +21,7 @@ public class TaiKhoanBUS {
             // Kiểm tra xem ID đã được thêm có hợp lệ không
             if (idInserted != 0) {
                 // Thêm vào danh sách
-                tkdto.setId_nhanVien(idInserted); // Cập nhật ID cho đối tượng DTO
+                tkdto.setNHANVIEN_idNV(idInserted); // Cập nhật ID cho đối tượng DTO
                 dsTaiKhoan.add(tkdto);
                 return true;
             } else {

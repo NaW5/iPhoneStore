@@ -114,7 +114,7 @@ public class SuaTaiKhoan extends JDialog {
                     //còn cái chức vụ nữa
                     // Update the NhanVienDTO object with the new data
                     TaiKhoanDTO tkdto = new TaiKhoanDTO();
-                    tkdto.setId_nhanVien(idNv);
+                    tkdto.setNHANVIEN_idNV(idNv);
                     tkdto.setTenDangNhap(tenDangNhap);
                     tkdto.setMatKhau(matKhau);
                     tkdto.setChucVu(chucVu);

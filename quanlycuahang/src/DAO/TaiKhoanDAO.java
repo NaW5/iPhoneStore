@@ -27,7 +27,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
                 ps.setString(1, taiKhoanDTO.getTenDangNhap());
                 ps.setString(2, taiKhoanDTO.getMatKhau());
                 ps.setString(3, taiKhoanDTO.getChucVu());
-                ps.setInt(4, taiKhoanDTO.getId_nhanVien());
+                ps.setInt(4, taiKhoanDTO.getNHANVIEN_idNV());
 
                 kq = ps.executeUpdate();
                 System.out.println("Không thể kết nối đến cơ sở dữ liệu");
@@ -54,7 +54,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             ps.setString(2, taiKhoanDTO.getMatKhau());
             ps.setInt(3, taiKhoanDTO.getTrangThai());
             ps.setString(4, taiKhoanDTO.getChucVu());
-            ps.setInt(5, taiKhoanDTO.getId_nhanVien());
+            ps.setInt(5, taiKhoanDTO.getNHANVIEN_idNV());
             kq = ps.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch (SQLException e){
@@ -111,7 +111,7 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
                 taiKhoan.setMatKhau(rs.getString("matKhau"));
                         taiKhoan.setChucVu(rs.getString("chucVu"));
                         taiKhoan.setTrangThai(rs.getInt("trangThai"));
-                        taiKhoan.setId_nhanVien(rs.getInt("NHANVIEN_idNV"));
+                        taiKhoan.setNHANVIEN_idNV(rs.getInt("NHANVIEN_idNV"));
                 taiKhoanList.add(taiKhoan);
             }
             JDBCUtil.closeConnection(con);
