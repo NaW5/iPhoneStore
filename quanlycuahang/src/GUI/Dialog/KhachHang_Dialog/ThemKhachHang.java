@@ -3,10 +3,9 @@ package GUI.Dialog.KhachHang_Dialog;
 import BUS.KhachHangBUS;
 import DTO.KhachHangDTO;
 
-import java.awt.*;
-
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 

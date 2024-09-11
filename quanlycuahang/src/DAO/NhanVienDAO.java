@@ -1,11 +1,18 @@
 package DAO;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import config.JDBCUtil;
 import DAOinterface.DAOinterface;
 import DTO.NhanVienDTO;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -110,56 +117,6 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO> {
         return nhanVienList;
     }
 
-//    public ArrayList<NhanVienDTO> selectAlll() {
-//        ArrayList<NhanVienDTO> kq = new ArrayList<NhanVienDTO>();
-//        try{
-//            Connection con = (Connection) JDBCUtil.getConnection();
-//            String sql = "SELECT * FROM nhanvien nv where nv.trangthai = 1 and not EXISTS(SELECT * FROM taikhoan tk WHERE nv.manv=tk.manv)";
-//            PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-//            ResultSet rs = (ResultSet) ps.executeQuery();
-//
-//            while(rs.next()){
-//                int idNV = rs.getInt("idNV");
-//                String hoTen = rs.getString("hoTen");
-//                int gioiTinh = rs.getInt("gioiTinh");
-//                Date ngaySinh = rs.getDate("ngaySinh");
-//                int sdt = rs.getInt("sdt");
-//                String isDelete = rs.getString("isDelete");
-//                NhanVienDTO nhanVien = new NhanVienDTO(idNV, hoTen, gioiTinh, ngaySinh, sdt, isDelete);
-//                kq.add(nhanVien);
-//            }
-//            JDBCUtil.closeConnection(con);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return kq;
-//    }
-
-//    public ArrayList<NhanVienDTO> selectAllNhanVien(){
-//        ArrayList<NhanVienDTO> kq = new ArrayList<NhanVienDTO>();
-//        try{
-//            Connection con = (Connection) JDBCUtil.getConnection();
-//            String sql = "select * from nhanvien nv where nv.isDelete = 1 and not EXISTS(select * from taikhoan tk where tk.id_nhanVien = nv.idNV)";
-//            PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-//            ResultSet rs = (ResultSet) ps.executeQuery();
-//
-//            while(rs.next()){
-//                int idNV = rs.getInt("idNV");
-//                String hoTen = rs.getString("hoTen");
-//                int gioiTinh = rs.getInt("gioiTinh");
-//                Date ngaySinh = rs.getDate("ngaySinh");
-//                int sdt = rs.getInt("sdt");
-//                String isDelete = rs.getString("isDelete");
-//                NhanVienDTO nhanVien = new NhanVienDTO(idNV, hoTen, gioiTinh, ngaySinh, sdt, isDelete);
-//                kq.add(nhanVien);
-//            }
-//            JDBCUtil.closeConnection(con);
-//        }catch (Exception e){
-//            e.printStackTrace();
-//        }
-//        return kq;
-//
-//    }
     @Override
     public NhanVienDTO selectById(int t) {
         NhanVienDTO nhanVien_dto = null;
@@ -233,6 +190,56 @@ public class NhanVienDAO implements DAOinterface<NhanVienDTO> {
         }
         return nhanVienList;
     }
+    public void exportToExcel(ArrayList<NhanVienDTO> dsnv, String filePath) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("NhanVien");
 
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        Cell cell = headerRow.createCell(0);
+        cell.setCellValue("ID");
+        cell = headerRow.createCell(1);
+        cell.setCellValue("HoTen");
+        cell = headerRow.createCell(2);
+        cell.setCellValue("GioiTinh");
+        cell = headerRow.createCell(3);
+        cell.setCellValue("NgaySinh");
+        cell = headerRow.createCell(4);
+        cell.setCellValue("SDT");
 
+        // Create data rows
+        for (int i = 0; i < dsnv.size(); i++) {
+            NhanVienDTO nv = dsnv.get(i);
+            Row row = sheet.createRow(i + 1);
+            row.createCell(0).setCellValue(nv.getIdNV());
+            row.createCell(1).setCellValue(nv.getHoTen());
+            row.createCell(2).setCellValue(nv.getGioiTinh() == 1 ? "Nam" : "Nữ");
+            row.createCell(3).setCellValue(nv.getNgaySinh().toString());
+            row.createCell(4).setCellValue(nv.getSdt());
+        }
+
+        // Write the output to a file
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public int getTotalEmployees() {
+        int totalEmployees = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT COUNT(*) AS total FROM nhanvien WHERE isDelete = 1";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                totalEmployees = rs.getInt("total");
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(NhanVienDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return totalEmployees;
+    }
+//NhanVienDAO
 }

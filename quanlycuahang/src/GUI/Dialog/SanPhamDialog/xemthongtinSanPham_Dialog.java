@@ -1,28 +1,15 @@
 package GUI.Dialog.SanPhamDialog;
 
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import DAO.SanPhamDAO;
 import DAO.ctSanPhamDAO;
-// Sửa phần này nha tú.ơ..................................................................................
-
 import DTO.SanPhamDTO;
 import DTO.ctSanPhamDTO;
 
-import java.awt.Color;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class xemthongtinSanPham_Dialog extends JDialog{
 	private JTextField txt_tensp;
@@ -38,13 +25,11 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 	private int idSP;
 
 	public xemthongtinSanPham_Dialog(int idSP) {
-		// Sửa phần này nha tú.ơ..................................................................................
-
 		SanPhamDTO spdto = SanPhamDAO.getInstance().selectById(idSP);
 		ctSanPhamDTO ctspdto = ctSanPhamDAO.getInstance().selectById(idSP);
 		getContentPane().setLayout(null);
 		JLabel lbl_hinhAnh = new JLabel("");
-		lbl_hinhAnh.setIcon(new ImageIcon("C:\\Users\\Smile\\eclipse-workspace\\MobileStore\\" + spdto.getHinhAnh()));
+		lbl_hinhAnh.setIcon(new ImageIcon("D:\\University\\Second year\\2nd Semester\\Java\\DoAn_Java\\img\\" + spdto.getHinhAnh()));
 		lbl_hinhAnh.setBounds(35, 117, 268, 308);
 		getContentPane().add(lbl_hinhAnh);
 		JLabel lbl_suasp = new JLabel("THÔNG TIN SẢN PHẨM " + String.valueOf(idSP));
@@ -55,6 +40,7 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 		getContentPane().add(lbl_suasp);
 
 		JButton btn_hinhAnh = new JButton("Hình minh họa");
+		btn_hinhAnh.setEnabled(false);
 		btn_hinhAnh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -122,6 +108,7 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 		getContentPane().add(lbl_mausac);
 
 		JComboBox cbb_mausac = new JComboBox();
+		cbb_mausac.setEnabled(false);
 		cbb_mausac.setModel(new DefaultComboBoxModel(new String[] {"Trắng", "Đen", "Vàng", "Xanh", "Xanh lá", "Hồng", "Tím", "Xám", "Đỏ"}));
 		cbb_mausac.setBounds(607, 83, 93, 30);
 		getContentPane().add(cbb_mausac);
@@ -154,6 +141,7 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 		getContentPane().add(lbl_manhinh);
 
 		JComboBox cbb_manhinh = new JComboBox();
+		cbb_manhinh.setEnabled(false);
 		cbb_manhinh.setModel(new DefaultComboBoxModel(new String[] {"6.1 Inch", "6.7 Inch"}));
 		cbb_manhinh.setBounds(607, 331, 93, 30);
 		getContentPane().add(cbb_manhinh);
@@ -203,12 +191,14 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 		getContentPane().add(lbl_rom);
 
 		JComboBox cbb_rom = new JComboBox();
+		cbb_rom.setEnabled(false);
 		cbb_rom.setModel(new DefaultComboBoxModel(new String[] {"64GB", "128GB", "512GB", "1TB"}));
 		cbb_rom.setBounds(916, 331, 93, 30);
 		getContentPane().add(cbb_rom);
 		cbb_rom.setSelectedItem(String.valueOf(ctspdto.getRom()));
 
 		JComboBox cbb_ram = new JComboBox();
+		cbb_ram.setEnabled(false);
 		cbb_ram.setModel(new DefaultComboBoxModel(new String[] {"2GB", "3GB", "4GB", "6GB"}));
 		cbb_ram.setBounds(765, 331, 93, 30);
 		getContentPane().add(cbb_ram);

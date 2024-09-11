@@ -1,32 +1,18 @@
 package GUI.Dialog.SanPhamDialog;
 
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import DAO.SanPhamDAO;
 import DAO.ctSanPhamDAO;
-////Sửa chỗ này///////////////////////////////////////////////////////////////////////////////////////////////
-
 import DTO.SanPhamDTO;
 import DTO.ctSanPhamDTO;
 import helper.ExtractString;
 
-import java.awt.Color;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.awt.event.ActionEvent;
 
 public class suaSanPham_Dialog extends JDialog{
 	private JTextField txt_tensp;
@@ -57,8 +43,6 @@ public class suaSanPham_Dialog extends JDialog{
 		ExtractString extractString = new ExtractString();
 		SanPhamDTO spdto = SanPhamDAO.getInstance().selectById(idSP);
 		ctSanPhamDTO ctspdto = ctSanPhamDAO.getInstance().selectById(idSP);
-		////Sửa chỗ này///////////////////////////////////////////////////////////////////////////////////////////////
-
 		getContentPane().setLayout(null);
 		JLabel lbl_hinhAnh = new JLabel("");
 		lbl_hinhAnh.setIcon(new ImageIcon("C:\\Users\\Smile\\eclipse-workspace\\MobileStore\\" + spdto.getHinhAnh()));

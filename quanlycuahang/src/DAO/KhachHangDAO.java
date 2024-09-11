@@ -1,7 +1,7 @@
 package DAO;
 
 import DTO.KhachHangDTO;
-import config.*;
+import config.JDBCUtil;
 
 import java.sql.*;
 import java.util.ArrayList;

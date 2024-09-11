@@ -1,8 +1,8 @@
 package BUS;
 
-import javax.swing.JFrame;
-
 import GUI.JPanel_QuanLyCuaHangDienThoai.SanPhamGUI;
+
+import javax.swing.*;
 
 public class temp {
 	public static void main(String[] args) {

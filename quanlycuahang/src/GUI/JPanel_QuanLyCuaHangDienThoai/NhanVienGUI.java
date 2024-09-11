@@ -1,10 +1,9 @@
-package GUI.Panel;
+package GUI.JPanel_QuanLyCuaHangDienThoai;
 
 import BUS.NhanVienBUS;
-import DAO.NhanVienDAO;
 import DTO.NhanVienDTO;
-import GUI.Dialog.SuaNhanVien;
-import GUI.Dialog.ThemNhanVien;
+import GUI.Dialog.NhanVienDialog.SuaNhanVien;
+import GUI.Dialog.NhanVienDialog.ThemNhanVien;
 //import GUI.Dialog.XoaNhanVien;
 
 import javax.swing.*;
@@ -15,16 +14,15 @@ import java.io.File;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
-public class NhanVien extends JPanel {
+public class NhanVienGUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable table_Nv;
     DefaultTableModel tblModel;
-    public NhanVienDAO nvDAO = new NhanVienDAO();
     private JTextField jTxt_timKiem;
     public NhanVienBUS nvBUS = new NhanVienBUS();
 
-    public NhanVien() {
+    public NhanVienGUI() {
         setLayout(new BorderLayout());
         JPanel panel_btn = new JPanel(new FlowLayout(FlowLayout.LEFT));
         String[] columnNames = {
@@ -43,13 +41,26 @@ public class NhanVien extends JPanel {
         JScrollPane scrollPane = new JScrollPane(table_Nv);
         add(scrollPane, BorderLayout.CENTER);
 
+        jTxt_timKiem = new JTextField(20);
+        panel_btn.add(jTxt_timKiem);
+        JButton btn_timKiem = new JButton("Tìm Kiếm");
+        btn_timKiem.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                timKiemNhanVien();
+            }
+        });
+        btn_timKiem.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_timkiem.png"))));
+        panel_btn.add(btn_timKiem);
+
         JButton btn_them = new JButton("Thêm");
         btn_them.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 ThemNhanVien themNhanVien = new ThemNhanVien();
+                themNhanVien.setLocationRelativeTo(null);
                 themNhanVien.setVisible(true);
             }
         });
+        btn_them.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_them.png"))));
         panel_btn.add(btn_them);
 
 
@@ -62,13 +73,14 @@ public class NhanVien extends JPanel {
                     DefaultTableModel model = (DefaultTableModel) table_Nv.getModel();
                     int idNv = (int) model.getValueAt(row, 0);
                     SuaNhanVien suaNhanVien = new SuaNhanVien(idNv);
-
+                    suaNhanVien.setLocationRelativeTo(null);
                     suaNhanVien.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần sửa");
                 }
             }
         });
+        btn_sua.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_sua.png"))));
         panel_btn.add(btn_sua);
 
         JButton btn_xoa = new JButton("Xóa");
@@ -88,6 +100,7 @@ public class NhanVien extends JPanel {
                 }
             }
         });
+        btn_xoa.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_xoa.png"))));
         panel_btn.add(btn_xoa);
 
         JButton btn_taiLai = new JButton("Tải Lại");
@@ -96,17 +109,11 @@ public class NhanVien extends JPanel {
                 loadDataTable();
             }
         });
+        btn_taiLai.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_tailai.png"))));
+
         panel_btn.add(btn_taiLai);
 
-        jTxt_timKiem = new JTextField(20);
-        panel_btn.add(jTxt_timKiem);
-        JButton btn_timKiem = new JButton("Tìm Kiếm");
-        btn_timKiem.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                timKiemNhanVien();
-            }
-        });
-        panel_btn.add(btn_timKiem);
+
 
         JButton btn_xuatExel = new JButton("Xuất Exel");
         btn_xuatExel.addActionListener(new ActionListener() {
@@ -118,10 +125,18 @@ public class NhanVien extends JPanel {
                 if (userSelection == JFileChooser.APPROVE_OPTION) {
                     File fileToSave = jFileChooser.getSelectedFile();
                     ArrayList<NhanVienDTO> dsnv = nvBUS.selectAll();
-                    nvBUS.exportToExcel(dsnv, fileToSave.getAbsolutePath());
+                    int kq = JOptionPane.showConfirmDialog(null, "Bạn có muốn xuất file Excel không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+                    if (kq == JOptionPane.YES_OPTION) {
+                        nvBUS.exportToExcel(dsnv, fileToSave.getAbsolutePath());
+
+                        JOptionPane.showMessageDialog(null, "Xuất Excel thành công!");
+                    }
                 }
             }
         });
+        btn_xuatExel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_exel.png"))));
+
         panel_btn.add(btn_xuatExel);
 
         add(panel_btn, BorderLayout.NORTH);

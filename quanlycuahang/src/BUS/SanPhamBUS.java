@@ -50,18 +50,29 @@ public class SanPhamBUS {
     public int tinhTongSoLuong() {
         return sanPhamDAO.getTotalQuantity();
     }
-    public ArrayList<SanPhamDTO> search(String text) {
-        text = text.toLowerCase();
-        listSP = layDanhSachTatCaSanPham(); // Cập nhật danh sách sản phẩm
-        ArrayList<SanPhamDTO> result = new ArrayList<>();
-        for (SanPhamDTO i : this.listSP) {
-            if (i.getTenSP().toLowerCase().contains(text)) {
-                result.add(i);
-            }
-        }
-        return result;
-    }
 
+//    public ArrayList<SanPhamDTO> search(String text) {
+//        text = text.toLowerCase();
+//        listSP = layDanhSachTatCaSanPham(); // Cập nhật danh sách sản phẩm
+//        ArrayList<SanPhamDTO> result = new ArrayList<>();
+//        for (SanPhamDTO i : this.listSP) {
+//            if (i.getTenSP().toLowerCase().contains(text)) {
+//                result.add(i);
+//            }
+//        }
+//        return result;
+//    }
+public ArrayList<SanPhamDTO> search(String text) {
+    text = text.toLowerCase();
+    listSP = layDanhSachTatCaChiTietSanPham();
+    ArrayList<SanPhamDTO> result = new ArrayList<>();
+    for (SanPhamDTO i : this.listSP) {
+        if (i.getTenSP().toLowerCase().contains(text)) {
+            result.add(i);
+        }
+    }
+    return result;
+}
 
     // Vũ thêm
     public int capNhapSoLuongKhiNhapHang(int idSanPham, int soLuongNhap){

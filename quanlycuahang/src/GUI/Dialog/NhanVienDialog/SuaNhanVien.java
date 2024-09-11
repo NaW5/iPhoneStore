@@ -1,7 +1,6 @@
-package GUI.Dialog;
+package GUI.Dialog.NhanVienDialog;
 
 import BUS.NhanVienBUS;
-import DAO.NhanVienDAO;
 import DTO.NhanVienDTO;
 
 import java.awt.BorderLayout;
@@ -14,7 +13,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.text.SimpleDateFormat;
+
 import com.toedter.calendar.JDateChooser;
 public class SuaNhanVien extends JDialog {
 

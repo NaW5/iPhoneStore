@@ -1,70 +1,97 @@
 package DTO;
+
 import java.util.Objects;
+
 public class TaiKhoanDTO {
-    private int NHANVIEN_idNV;
-    private String useName;
-    private String matKhau;
-    private String chucVu;
+    private String username;
+    private String password;
     private int trangThai;
+    private String chucVu;
+    private int NHANVIEN_idNV;
 
     public TaiKhoanDTO() {
 
     }
 
-    public TaiKhoanDTO(int NHANVIEN_idNV, String userName, String matKhau, String chucVu, int trangThai) {
-        this.NHANVIEN_idNV = NHANVIEN_idNV;
-        this.useName = userName;
-        this.matKhau = matKhau;
-        this.chucVu = chucVu;
+
+
+    public TaiKhoanDTO(String username, String password, int trangThai, String chucVu, int nHANVIEN_idNV) {
+        super();
+        this.username = username;
+        this.password = password;
         this.trangThai = trangThai;
-    }
-
-    public void setNHANVIEN_idNV(int NHANVIEN_idNV) {
-        this.NHANVIEN_idNV = NHANVIEN_idNV;
-    }
-
-    public int getNHANVIEN_idNV() {
-        return NHANVIEN_idNV;
-    }
-
-    public void setUseName(String useName) {
-        this.useName = useName;
-    }
-
-    public String getUseName() {
-        return useName;
-    }
-
-    public void setMatKhau(String matKhau) {
-        this.matKhau = matKhau;
-    }
-
-    public String getMatKhau() {
-        return matKhau;
-    }
-
-    public void setChucVu(String chucVu) {
         this.chucVu = chucVu;
+        NHANVIEN_idNV = nHANVIEN_idNV;
     }
 
-    public String getChucVu() {
-        return chucVu;
+
+
+    public String getUsername() {
+        return username;
     }
 
-    public void setTrangThai(int trangThai) {
-        this.trangThai = trangThai;
+
+
+    public void setUsername(String username) {
+        this.username = username;
     }
+
+
+
+    public String getPassword() {
+        return password;
+    }
+
+
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+
 
     public int getTrangThai() {
         return trangThai;
     }
 
+
+
+    public void setTrangThai(int trangThai) {
+        this.trangThai = trangThai;
+    }
+
+
+
+    public String getChucVu() {
+        return chucVu;
+    }
+
+
+
+    public void setChucVu(String chucVu) {
+        this.chucVu = chucVu;
+    }
+
+
+
+    public int getNHANVIEN_idNV() {
+        return NHANVIEN_idNV;
+    }
+
+
+
+    public void setNHANVIEN_idNV(int nHANVIEN_idNV) {
+        NHANVIEN_idNV = nHANVIEN_idNV;
+    }
+
+
+
     @Override
     public int hashCode() {
         int hash = 3;
         hash = 19 * hash + this.NHANVIEN_idNV;
-        hash = 19 * hash + Objects.hashCode(this.useName);
-        hash = 19 * hash + Objects.hashCode(this.matKhau);
+        hash = 19 * hash + Objects.hashCode(this.username);
+        hash = 19 * hash + Objects.hashCode(this.password);
         hash = 19 * hash + Objects.hashCode(this.chucVu);
         hash = 19 * hash + this.trangThai;
         return hash;
@@ -91,13 +118,13 @@ public class TaiKhoanDTO {
         if (this.trangThai != other.trangThai) {
             return false;
         }
-        if(!Objects.equals(this.useName, other.useName)) {
+        if(!Objects.equals(this.username, other.username)) {
             return false;
         }
-        return Objects.equals(this.matKhau, other.matKhau);
+        return Objects.equals(this.password, other.password);
     }
     @Override
     public String toString() {
-        return "ID nhân viên: " + NHANVIEN_idNV + ", Tên đăng nhập: " + useName + ", Mật khẩu: " + matKhau + ", Chức vụ: " + chucVu + ", Trạng thái: " + trangThai;
+        return "ID nhân viên: " + NHANVIEN_idNV + ", Tên đăng nhập: " + username + ", Mật khẩu: " + password + ", Chức vụ: " + chucVu + ", Trạng thái: " + trangThai;
     }
 }

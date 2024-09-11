@@ -1,20 +1,11 @@
 package GUI.Dialog.HoaDonDialog;
 
-import javax.swing.JDialog;
-
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-
 import BUS.HoaDonBUS;
 
-
-import java.awt.Color;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
-
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class xoaHoaDon_Dialog extends JDialog{
 	public HoaDonBUS hdBUS = new HoaDonBUS();

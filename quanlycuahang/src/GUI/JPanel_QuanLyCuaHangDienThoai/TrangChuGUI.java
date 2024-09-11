@@ -1,7 +1,7 @@
 package GUI.JPanel_QuanLyCuaHangDienThoai;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
+import javax.swing.*;
+import java.awt.*;
 
 public class TrangChuGUI extends JPanel {
 
@@ -11,9 +11,10 @@ public class TrangChuGUI extends JPanel {
 	 * Create the panel.
 	 */
 	public TrangChuGUI() {
-		
-		JLabel jL = new JLabel("ĐÂY LÀ TRANG CHỦ");
-		add(jL);
+		setLayout(new BorderLayout());
+		JLabel jL = new JLabel("");
+		jL.setIcon(new ImageIcon("D:\\University\\Second year\\2nd Semester\\Java\\DoAn_Java\\img\\login.jpg"));
+		add(jL, BorderLayout.CENTER);
 
 	}
 

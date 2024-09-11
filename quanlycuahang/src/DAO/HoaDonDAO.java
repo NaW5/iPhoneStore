@@ -1,12 +1,12 @@
 package DAO;
 
+import DTO.HoaDonDTO;
+import config.JDBCUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import DTO.HoaDonDTO;
-import config.JDBCUtil;
 
 public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
 
@@ -27,7 +27,7 @@ public class HoaDonDAO implements DAOInterface<HoaDonDTO> {
             pst.setInt(4, t.getNHANVIEN_idNV());
             pst.setInt(5, t.getKHACHHANG_idKH());
             ketQua = pst.executeUpdate();
-            System.out.println("Đã thực thi: " + sql);
+            System.out.println("Đã thực thi: " + sql) ;
             System.out.println("Đã thay đổi " + ketQua + " dòng");
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {

@@ -1,23 +1,13 @@
 package GUI.Dialog.SanPhamDialog;
 
-import javax.swing.JDialog;
-
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-
-
 import BUS.SanPhamBUS;
-// Sửa phần này nha tú.ơ..................................................................................
-
 import DAO.SanPhamDAO;
 import DTO.SanPhamDTO;
 
-import java.awt.Color;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class xoaSanPham_Dialog extends JDialog{
 	private String imagePath;

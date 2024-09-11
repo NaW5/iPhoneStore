@@ -3,7 +3,10 @@ package GUI.Dialog.PhieuNhap;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
 import BUS.ctSanPhamBUS;
-import DTO.*;
+import DTO.ChiTietPhieuNhapDTO;
+import DTO.PhieuNhapDTO;
+import DTO.SanPhamDTO;
+import DTO.ctSanPhamDTO;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;

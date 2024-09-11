@@ -1,20 +1,14 @@
 package GUI.Dialog.HoaDonDialog;
 
-import javax.swing.JDialog;
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.util.ArrayList;
-
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-
 import BUS.KhachHangBUS;
 import DTO.KhachHangDTO;
-import java.awt.event.ActionListener;
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 public class xemDSKH_Dialog extends JDialog {
     private JTextField txt_timKiemKH;

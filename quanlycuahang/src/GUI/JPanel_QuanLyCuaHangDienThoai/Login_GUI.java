@@ -28,11 +28,14 @@ import javax.swing.JDialog;
 import javax.swing.JPasswordField;
 import java.awt.FlowLayout;
 
-public class Login_GUI extends JPanel{
+public class Login_GUI extends JPanel {
 	private JTextField txt_username;
 	private JPasswordField passwordField;
+	private JFrame loginFrame;
 	public TaiKhoanBUS tkBUS = new TaiKhoanBUS();
-	public Login_GUI() {
+
+	public Login_GUI(JFrame loginFrame) {
+		this.loginFrame = loginFrame;
 		setBorder(new LineBorder(new Color(0, 255, 255), 14, true));
 		setLayout(new CardLayout(0, 0));
 
@@ -56,6 +59,11 @@ public class Login_GUI extends JPanel{
 		panel_1.add(lbl_username);
 
 		txt_username = new JTextField();
+		txt_username.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				handleLogin();
+			}
+		});
 		panel_1.add(txt_username);
 		txt_username.setColumns(10);
 
@@ -66,49 +74,22 @@ public class Login_GUI extends JPanel{
 		passwordField = new JPasswordField();
 		passwordField.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<TaiKhoanDTO> tkList = tkBUS.selectAll();
-				boolean flag = false;
-				String password = "";
-				int idNVHienTai = -1;
-				for(TaiKhoanDTO tk : tkList) {
-					if(tk.getUsername().equals(txt_username.getText())) {
-						flag = true;
-						password = tk.getPassword();
-						idNVHienTai = tk.getNHANVIEN_idNV();
-						break;
-					}
-				}
-				if(!flag) {
-					JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-					txt_username.requestFocus();
-				}
-				else {
-					if(!passwordField.getText().equals(password)) {
-						JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-						txt_username.requestFocus();
-					}
-				}
-				JFrame frame = new QuanLyKho(idNVHienTai);
-				frame.setVisible(true);
+				handleLogin();
 			}
 		});
 		panel_1.add(passwordField);
 
-//		JCheckBox chckbx_showPassword = new JCheckBox("Hiện mật khẩu");
 		JCheckBox chckbx_showPassword = new JCheckBox("Hiện mật khẩu");
 		chckbx_showPassword.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (chckbx_showPassword.isSelected()) {
-					// Nếu checkbox được chọn, hiển thị mật khẩu dưới dạng văn bản
 					passwordField.setEchoChar((char) 0);
 				} else {
-					// Nếu checkbox không được chọn, hiển thị mật khẩu dưới dạng ký tự '*'
 					passwordField.setEchoChar('*');
 				}
 			}
 		});
 		panel_1.add(chckbx_showPassword);
-
 
 		JLabel space = new JLabel("");
 		panel_1.add(space);
@@ -116,32 +97,7 @@ public class Login_GUI extends JPanel{
 		JButton btn_login = new JButton("Đăng nhập");
 		btn_login.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				ArrayList<TaiKhoanDTO> tkList = tkBUS.selectAll();
-				boolean flag = false;
-				String password = "";
-				int idNVHienTai = -1;
-				for(TaiKhoanDTO tk : tkList) {
-					if(tk.getUsername().equals(txt_username.getText())) {
-						flag = true;
-						password = tk.getPassword();
-						idNVHienTai = tk.getNHANVIEN_idNV();
-						break;
-					}
-				}
-				if(!flag) {
-					JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-					txt_username.requestFocus();
-				}
-				else if(!passwordField.getText().equals(password)) {
-					JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
-					txt_username.requestFocus();
-				}
-				//đăng nhập thành công
-				else{
-					JFrame frame = new QuanLyKho(idNVHienTai);
-					frame.setVisible(true);
-
-				}
+				handleLogin();
 			}
 		});
 		panel_1.add(btn_login);
@@ -170,12 +126,31 @@ public class Login_GUI extends JPanel{
 		panel.add(lblNewLabel);
 	}
 
-	public static void main(String[] args) {
-		JFrame frame = new JFrame("Đăng Nhập");
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(900, 460);
-		frame.getContentPane().add(new Login_GUI());
-		frame.setLocationRelativeTo(null);
-		frame.setVisible(true);
+	private void handleLogin() {
+		ArrayList<TaiKhoanDTO> tkList = tkBUS.selectAll();
+		boolean flag = false;
+		String password = "";
+		int idNVHienTai = -1;
+		for (TaiKhoanDTO tk : tkList) {
+			if (tk.getUsername().equals(txt_username.getText())) {
+				flag = true;
+				password = tk.getPassword();
+				idNVHienTai = tk.getNHANVIEN_idNV();
+				break;
+			}
+		}
+		if (!flag) {
+			JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+			txt_username.requestFocus();
+		} else {
+			if (!passwordField.getText().equals(password)) {
+				JOptionPane.showMessageDialog(null, "Sai tên đăng nhập hoặc mật khẩu!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
+				txt_username.requestFocus();
+			} else {
+				JFrame frame = new QuanLyKho(idNVHienTai);
+				frame.setVisible(true);
+				loginFrame.dispose();
+			}
+		}
 	}
 }

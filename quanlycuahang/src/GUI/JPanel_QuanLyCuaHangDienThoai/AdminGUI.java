@@ -1,8 +1,7 @@
 package GUI.JPanel_QuanLyCuaHangDienThoai;
 
-import javax.swing.JPanel;
-import javax.swing.JLabel;
-import java.awt.Font;
+import javax.swing.*;
+import java.awt.*;
 
 public class AdminGUI extends JPanel{
 	public AdminGUI() {

@@ -1,25 +1,5 @@
 package GUI.JPanel_QuanLyCuaHangDienThoai;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JButton;
-import java.awt.*;
-import java.awt.GridLayout;
-import javax.swing.ImageIcon;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
-import java.util.Date;
-import java.awt.event.ActionEvent;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.DefaultComboBoxModel;
-import javax.swing.table.DefaultTableModel;
-
-import BUS.SanPhamBUS;
 import DAO.HoaDonDAO;
 import DAO.KhachHangDAO;
 import DAO.NhanVienDAO;
@@ -27,28 +7,27 @@ import DTO.HoaDonDTO;
 import DTO.KhachHangDTO;
 import DTO.NhanVienDTO;
 import GUI.Dialog.HoaDonDialog.suaHoaDon_Dialog;
-import GUI.Dialog.HoaDonDialog.themHoaDon_Dialog;
 import GUI.Dialog.HoaDonDialog.xemHoaDon_Dialog;
 import GUI.Dialog.HoaDonDialog.xoaHoaDon_Dialog;
-import GUI.Dialog.SanPhamDialog.suaSanPham_Dialog;
 import GUI.Dialog.SanPhamDialog.themSanPham_Dialog;
-import GUI.Dialog.SanPhamDialog.xemDanhSachImeiSanPham_Dialog;
-import GUI.Dialog.SanPhamDialog.xemthongtinSanPham_Dialog;
-import GUI.Dialog.SanPhamDialog.xoaSanPham_Dialog;
+import com.toedter.calendar.JDateChooser;
 
+import javax.swing.*;
+import javax.swing.GroupLayout.Alignment;
+import javax.swing.LayoutStyle.ComponentPlacement;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.text.DecimalFormat;
 import java.text.Normalizer;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-
-import javax.swing.JTextField;
-import java.util.regex.Pattern;
-import javax.swing.JLabel;
-import com.toedter.calendar.JDateChooser;
-import javax.swing.GroupLayout;
-import javax.swing.GroupLayout.Alignment;
-import javax.swing.LayoutStyle.ComponentPlacement;
+import java.util.ArrayList;
+import java.util.Date;
 
 public class PhieuXuatGUI extends JPanel {
 
@@ -362,14 +341,14 @@ public class PhieuXuatGUI extends JPanel {
             public void propertyChange(PropertyChangeEvent evt) {
             	if ("date".equals(evt.getPropertyName())) {
                     // Lấy ngày mới từ sự kiện
-                    java.util.Date startDate = dateChooser_ngaybatdau.getDate();
+                    Date startDate = dateChooser_ngaybatdau.getDate();
                     // Chuyển đổi java.util.Date thành java.sql.Date
                     java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
 
                     // Kiểm tra xem ngày kết thúc đã được chọn hay chưa
                     if (dateChooser_ngayketthuc.getDate() != null) {
                         // Nếu đã chọn ngày kết thúc
-                        java.util.Date endDate = dateChooser_ngayketthuc.getDate();
+                        Date endDate = dateChooser_ngayketthuc.getDate();
                         // Chuyển đổi java.util.Date thành java.sql.Date
                         java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
                         // Gọi phương thức để tải dữ liệu từ ngày bắt đầu đến ngày kết thúc
@@ -398,11 +377,11 @@ public class PhieuXuatGUI extends JPanel {
             public void propertyChange(PropertyChangeEvent evt) {
             	if ("date".equals(evt.getPropertyName())) {
                     // Lấy ngày mới từ sự kiện
-                    java.util.Date startDate = dateChooser_ngaybatdau.getDate();
+                    Date startDate = dateChooser_ngaybatdau.getDate();
                     // Chuyển đổi java.util.Date thành java.sql.Date
                     java.sql.Date sqlStartDate = new java.sql.Date(startDate.getTime());
                     // Lấy ngày hiện tại
-                    java.util.Date endDate = dateChooser_ngayketthuc.getDate();
+                    Date endDate = dateChooser_ngayketthuc.getDate();
                     // Chuyển đổi java.util.Date thành java.sql.Date
                     java.sql.Date sqlEndDate = new java.sql.Date(endDate.getTime());
                     // Gọi phương thức để tải dữ liệu từ ngày được chọn đến ngày hiện tại

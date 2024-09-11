@@ -8,7 +8,7 @@ public class ExtractString {
 
         if (splitPath.length > 3) {
             StringBuilder extractedString = new StringBuilder();
-            for (int i = 5; i < splitPath.length; i++) {
+            for (int i = 7; i < splitPath.length; i++) {
                 extractedString.append(splitPath[i]);
                 extractedString.append("\\"); // Add back the delimiters
             }
@@ -21,7 +21,7 @@ public class ExtractString {
     }
     public static void main(String[] args) {
         // Test cases with different file paths
-        String filePath1 = "C:\\Users\\Smile\\eclipse-workspace\\MobileStore\\Image\\11\\11\\den.png";
+        String filePath1 = "D:\\University\\Second year\\2nd Semester\\Java\\DoAn_Java\\img\\Image\\X\\den.png";
 
         ExtractString extractString = new ExtractString();
 

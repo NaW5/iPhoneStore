@@ -1,36 +1,22 @@
 package GUI.Dialog.SanPhamDialog;
 
-import javax.swing.JDialog;
-import javax.swing.JFileChooser;
-
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JFrame;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-import javax.swing.filechooser.FileNameExtensionFilter;
-
 import BUS.IMEIBUS;
 import BUS.SanPhamBUS;
 import BUS.ctSanPhamBUS;
 import DAO.IMEIDAO;
 import DAO.SanPhamDAO;
-// Sửa phần này nha tú.ơ..................................................................................
 import DTO.IMEIDTO;
 import DTO.SanPhamDTO;
 import DTO.ctSanPhamDTO;
 import helper.ExtractString;
 
-import java.awt.Color;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JTextField;
-import javax.swing.JComboBox;
-import javax.swing.DefaultComboBoxModel;
+import javax.swing.*;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.awt.event.ActionEvent;
 
 public class themSanPham_Dialog extends JDialog{
 	private JTextField txt_tensp;
@@ -120,15 +106,7 @@ public class themSanPham_Dialog extends JDialog{
 		txt_giaban.setBounds(384, 246, 129, 30);
 		getContentPane().add(txt_giaban);
 
-		JLabel lbl_soluong = new JLabel("Số lượng");
-		lbl_soluong.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lbl_soluong.setBounds(383, 306, 93, 14);
-		getContentPane().add(lbl_soluong);
 
-		txt_soluong = new JTextField();
-		txt_soluong.setColumns(10);
-		txt_soluong.setBounds(383, 331, 129, 30);
-		getContentPane().add(txt_soluong);
 
 		JLabel lbl_mausac = new JLabel("Màu sắc");
 		lbl_mausac.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -242,9 +220,6 @@ public class themSanPham_Dialog extends JDialog{
 				else if(!isNumeric(txt_giaban.getText())) {
 					JOptionPane.showMessageDialog(null, "Giá bán phải là số");
 				}
-				else if(!isNumeric(txt_soluong.getText())) {
-					JOptionPane.showMessageDialog(null, "Số lượng phải là số");
-				}
 				else if(txt_chip.getText().equals("") || txt_pin.getText().equals("") || txt_hdh.getText().equals("") || txt_camerasau.getText().equals("") || txt_cameratruoc.getText().equals("") || imagePath.equals("")) {
 					JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
 				}
@@ -255,10 +230,9 @@ public class themSanPham_Dialog extends JDialog{
 					String tensp = txt_tensp.getText();
 					int giaNhap = Integer.parseInt(txt_gianhap.getText());
 					int giaBan = Integer.parseInt(txt_giaban.getText());
-					int soLuong = Integer.parseInt(txt_soluong.getText());
 					String mauSac = (String) cbb_mausac.getSelectedItem();
 					String hinhAnh =  extractString.catLinkAnh(imagePath);
-					SanPhamDTO spdto = new SanPhamDTO(idsp, tensp, giaNhap, giaBan, soLuong, hinhAnh, mauSac, 0);
+					SanPhamDTO spdto = new SanPhamDTO(idsp, tensp, giaNhap, giaBan, 0, hinhAnh, mauSac, 0);
 					spBUS.themSanPham(spdto);
 
 
@@ -361,16 +335,9 @@ public class themSanPham_Dialog extends JDialog{
 		getContentPane().add(txt_giaban);
 		txt_giaban.setEditable(false);
 
-		JLabel lbl_soluong = new JLabel("Số lượng");
-		lbl_soluong.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lbl_soluong.setBounds(383, 306, 93, 14);
-		getContentPane().add(lbl_soluong);
 
-		txt_soluong = new JTextField(String.valueOf(spdto.getSoLuong()));
-		txt_soluong.setColumns(10);
-		txt_soluong.setBounds(383, 331, 129, 30);
-		getContentPane().add(txt_soluong);
-		txt_soluong.setEditable(false);
+
+
 
 		JLabel lbl_mausac = new JLabel("Màu sắc");
 		lbl_mausac.setFont(new Font("Tahoma", Font.PLAIN, 12));

@@ -1,4 +1,4 @@
-package GUI.Dialog;
+package GUI.Dialog.NhanVienDialog;
 
 import BUS.NhanVienBUS;
 import DTO.NhanVienDTO;

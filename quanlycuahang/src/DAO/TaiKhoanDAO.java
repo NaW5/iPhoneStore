@@ -1,46 +1,41 @@
 package DAO;
 
-import DAOinterface.DAOinterface;
 import DTO.NhanVienDTO;
 import DTO.TaiKhoanDTO;
 import config.JDBCUtil;
-
 import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
+public class TaiKhoanDAO implements DAOInterface<TaiKhoanDTO> {
     public static TaiKhoanDAO getInstance(){
         return new TaiKhoanDAO();
     }
 
     @Override
     public int insert(TaiKhoanDTO taiKhoanDTO) {
-        int kq = 0;
-        Connection con = null;
+        int ketQua = 0;
         try{
-            con = JDBCUtil.getConnection();
-            if(con == null){
-                String sql = "insert into taikhoan( tenDangNhap, matKhau, chucVu, trangThai, NHANVIEN_idNV) values(?, ?, ?, 1, ?)";
-                PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-                ps.setString(1, taiKhoanDTO.getUseName());
-                ps.setString(2, taiKhoanDTO.getMatKhau());
-                ps.setString(3, taiKhoanDTO.getChucVu());
-                ps.setInt(4, taiKhoanDTO.getNHANVIEN_idNV());
-
-                kq = ps.executeUpdate();
-                System.out.println("Không thể kết nối đến cơ sở dữ liệu");
-            }else {
-                System.out.println("Lỗi khi thêm tài khoản vào cơ sở dữ liệu");
-            }
-
-//            JDBCUtil.closeConnection(con);
-        }catch (SQLException e){
-            e.printStackTrace();
-            System.out.println("Lỗi khi thêm tài khoản vào cơ sở dữ liệu: " + e.getMessage());
+            Connection con = JDBCUtil.getConnection();
+            String sql = "insert into taikhoan(userName, matKhau, chucVu, trangThai, NHANVIEN_idNV) values(?, ?, ?, 1, ?)";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, taiKhoanDTO.getUsername());
+            ps.setString(2, taiKhoanDTO.getPassword());
+            ps.setString(3, taiKhoanDTO.getChucVu());
+            ps.setInt(4, taiKhoanDTO.getNHANVIEN_idNV());
+            ketQua = ps.executeUpdate();
+            System.out.println("Đã thực thi: " + sql);
+            System.out.println("Đã thay đổi " + ketQua + " dòng");
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
         }
-        return kq;
+        return ketQua;
     }
 
     @Override
@@ -50,8 +45,8 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             Connection con = JDBCUtil.getConnection();
             String sql = "update taikhoan set userName = ?, matKhau = ?, trangThai = ?, chucVu = ? where NHANVIEN_idNV = ?";
             PreparedStatement ps = (PreparedStatement) con.prepareStatement(sql);
-            ps.setString(1, taiKhoanDTO.getUseName());
-            ps.setString(2, taiKhoanDTO.getMatKhau());
+            ps.setString(1, taiKhoanDTO.getUsername());
+            ps.setString(2, taiKhoanDTO.getPassword());
             ps.setInt(3, taiKhoanDTO.getTrangThai());
             ps.setString(4, taiKhoanDTO.getChucVu());
             ps.setInt(5, taiKhoanDTO.getNHANVIEN_idNV());
@@ -79,13 +74,13 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
 //    }
 
     @Override
-    public int delete(int idNV) {
+    public int delete(String idNV) {
         int kq = 0;
         try{
             Connection con = JDBCUtil.getConnection();
             String sql = "update taikhoan set trangThai = 0 where NHANVIEN_idNV = ?";
             PreparedStatement ps =  con.prepareStatement(sql);
-            ps.setInt(1, idNV);
+            ps.setInt(1, Integer.parseInt(idNV));
             kq = ps.executeUpdate();
             JDBCUtil.closeConnection(con);
         }catch (SQLException e){
@@ -101,17 +96,16 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
                 taiKhoanList = new ArrayList<>();
         try {
             Connection con =  JDBCUtil.getConnection();
-//            String sql = "SELECT tk.* FROM TaiKhoan tk JOIN NhanVien nv ON tk.NHANVIEN_idNV = nv.idNV WHERE tk.trangThai = '0' OR tk.trangThai = '1'";
             String sql = "SELECT * FROM taikhoan where trangThai = 1";
             Statement stmt = con.createStatement();
             ResultSet rs = stmt.executeQuery(sql);
             while (rs.next()) {
                 TaiKhoanDTO taiKhoan = new TaiKhoanDTO();
-                taiKhoan.setUseName(rs.getString("userName"));
-                taiKhoan.setMatKhau(rs.getString("matKhau"));
-                        taiKhoan.setChucVu(rs.getString("chucVu"));
-                        taiKhoan.setTrangThai(rs.getInt("trangThai"));
-                        taiKhoan.setNHANVIEN_idNV(rs.getInt("NHANVIEN_idNV"));
+                taiKhoan.setUsername((rs.getString("userName")));
+                taiKhoan.setPassword(rs.getString("matKhau"));
+                taiKhoan.setChucVu(rs.getString("chucVu"));
+                taiKhoan.setTrangThai(rs.getInt("trangThai"));
+                taiKhoan.setNHANVIEN_idNV(rs.getInt("NHANVIEN_idNV"));
                 taiKhoanList.add(taiKhoan);
             }
             JDBCUtil.closeConnection(con);
@@ -133,10 +127,10 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             if(rs.next()){
                 taiKhoanDTO = new TaiKhoanDTO();
                 rs.getString("userName");
-                        rs.getString("matKhau");
-                        rs.getString("chucVu");
-                        rs.getInt("trangThai");
-                        rs.getInt("NHANVIEN_idNV");
+                rs.getString("matKhau");
+                rs.getString("chucVu");
+                rs.getInt("trangThai");
+                rs.getInt("NHANVIEN_idNV");
             }
             JDBCUtil.closeConnection(con);
         } catch (Exception e) {
@@ -145,7 +139,6 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
         return taiKhoanDTO;
     }
 
-    @Override
     public int getAutoIncrement() {
         return 0;
     }
@@ -182,11 +175,11 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 TaiKhoanDTO taiKhoanDTO = new TaiKhoanDTO(
-                        rs.getInt("NHANVIEN_idNV"),
                         rs.getString("userName"),
                         rs.getString("matKhau"),
+                        rs.getInt("trangThai"),
                         rs.getString("chucVu"),
-                        rs.getInt("trangThai")
+                        rs.getInt("NHANVIEN_idNV")
                 );
                 taiKhoanList.add(taiKhoanDTO);
             }
@@ -195,5 +188,28 @@ public class TaiKhoanDAO implements DAOinterface<TaiKhoanDTO> {
             Logger.getLogger(NhanVienDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return taiKhoanList;
+    }
+
+
+
+    @Override
+    public ArrayList<TaiKhoanDTO> selectByCondition(String condition) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public int delete(int idNv) {
+        int kq = 0;
+        try{
+            Connection con = JDBCUtil.getConnection();
+            String sql = "update taikhoan set trangThai = 0 where NHANVIEN_idNV = ?";
+            PreparedStatement ps =  con.prepareStatement(sql);
+            ps.setInt(1, idNv);
+            kq = ps.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        }catch (SQLException e){
+            Logger.getLogger(TaiKhoanDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return kq;
     }
 }

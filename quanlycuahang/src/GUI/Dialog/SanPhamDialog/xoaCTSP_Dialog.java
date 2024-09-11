@@ -1,22 +1,12 @@
 package GUI.Dialog.SanPhamDialog;
 
-import javax.swing.JDialog;
-
-import javax.swing.JLabel;
-import java.awt.Font;
-import javax.swing.SwingConstants;
-
-// Sửa phần này nha tú.ơ..................................................................................
-
 import DAO.IMEIDAO;
-
 import DTO.IMEIDTO;
 
-import java.awt.Color;
-import javax.swing.JButton;
-
-import java.awt.event.ActionListener;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class xoaCTSP_Dialog extends JDialog{
 

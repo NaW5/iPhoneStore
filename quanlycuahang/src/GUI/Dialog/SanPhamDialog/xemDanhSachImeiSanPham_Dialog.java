@@ -1,31 +1,14 @@
 package GUI.Dialog.SanPhamDialog;
 
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import java.awt.Font;
-import java.awt.GridBagConstraints;
-import java.awt.Insets;
-
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableModel;
-// Sửa phần này nha tú.ơ..................................................................................
-
 import DAO.IMEIDAO;
-
 import DTO.IMEIDTO;
 
-
-import java.awt.Color;
-import javax.swing.JButton;
-
-import javax.swing.JPanel;
-
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.awt.event.ActionEvent;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
 
 public class xemDanhSachImeiSanPham_Dialog extends JDialog{
 	private JTable table_ctsp;

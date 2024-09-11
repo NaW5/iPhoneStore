@@ -1,6 +1,15 @@
 package DAO;
+
+import DTO.PhieuNhapDTO;
 import config.JDBCUtil;
-import  DTO.PhieuNhapDTO;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
@@ -39,7 +48,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
             String sql = "UPDATE phieunhapkho SET idPhieuNhap = ?, thoiGian = ?, tongTien = ?, NHANVIEN_idNV = ? WHERE idPhieuNhap = ?";
             PreparedStatement pst =  con.prepareStatement(sql);
             pst.setInt(1, pnDTO.getIdPhieuNhap());
-            pst.setTimestamp(2, new java.sql.Timestamp(pnDTO.getThoiGian().getTime()));
+            pst.setTimestamp(2, new Timestamp(pnDTO.getThoiGian().getTime()));
             pst.setDouble(3, pnDTO.getTongTien());
             pst.setInt(4, pnDTO.getIdNhanVien());
             ketqua = pst.executeUpdate();
@@ -191,6 +200,36 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
             Logger.getLogger(KhachHangDAO.class.getName()).log(Level.SEVERE, null, e);
         }
         return phieuNhapList;
+    }
+    public void exportToExcel(ArrayList<PhieuNhapDTO> dspn, String filePath) {
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Phiếu nhập");
+
+        // Create header row
+        Row headerRow = sheet.createRow(0);
+        Cell cell = headerRow.createCell(0);
+        cell.setCellValue("Mã phiếu nhập ");
+        cell = headerRow.createCell(1);
+        cell.setCellValue("Mã nhân viên");
+        cell = headerRow.createCell(2);
+        cell.setCellValue("Tổng tiền");
+
+        // Create data rows
+        for (int i = 0; i < dspn.size(); i++) {
+            PhieuNhapDTO pn = dspn.get(i);
+            Row row = sheet.createRow(i + 1);
+            row.createCell(0).setCellValue(pn.getIdPhieuNhap());
+            row.createCell(1).setCellValue(pn.getIdNhanVien());
+            String tongTien = String.format("%,.0f", pn.getTongTien());
+            row.createCell(2).setCellValue(tongTien);
+        }
+
+        // Write the output to a file
+        try (FileOutputStream fileOut = new FileOutputStream(filePath)) {
+            workbook.write(fileOut);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 }

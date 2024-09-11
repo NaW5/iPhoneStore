@@ -1,4 +1,4 @@
-package GUI.Dialog;
+package GUI.Dialog.TaiKhoan_Dialog;
 
 
 
@@ -13,7 +13,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import BUS.TaiKhoanBUS;
 import DAO.NhanVienDAO;
 import DAO.TaiKhoanDAO;
 import DTO.NhanVienDTO;
@@ -27,7 +26,7 @@ public class SuaTaiKhoan extends JDialog {
     private JTextField jTxt_tenDangNhap;
     private JTextField jTxt_matKhau;
     private JTextField jTxt_chucVu;
-    private TaiKhoanBUS tkBUS;
+    //    private TaiKhoanBUS tk;
     private int idNv;
 
     /**
@@ -37,7 +36,7 @@ public class SuaTaiKhoan extends JDialog {
 
     public SuaTaiKhoan() {
 
-        tkBUS =  new TaiKhoanBUS();
+//        tk =  new TaiKhoanBUS();
         setTitle("Sửa Tài Khoản");
         setBounds(100, 100, 507, 590);
         getContentPane().setLayout(new BorderLayout());
@@ -115,14 +114,14 @@ public class SuaTaiKhoan extends JDialog {
                     // Update the NhanVienDTO object with the new data
                     TaiKhoanDTO tkdto = new TaiKhoanDTO();
                     tkdto.setNHANVIEN_idNV(idNv);
-                    tkdto.setUseName(tenDangNhap);
-                    tkdto.setMatKhau(matKhau);
+                    tkdto.setUsername(tenDangNhap);
+                    tkdto.setPassword(matKhau);
                     tkdto.setChucVu(chucVu);
 
                     tkdto.setTrangThai(1);
 
                     // Update the database
-                    int result = tkBUS.update(tkdto);
+                    int result = TaiKhoanDAO.getInstance().update(tkdto);
                     if(result > 0){
                         JOptionPane.showMessageDialog(null, "Sửa nhân viên thành công!");
 

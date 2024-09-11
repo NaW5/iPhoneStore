@@ -1,22 +1,12 @@
 package GUI.JFrame_QuanLyCuaHangDienThoai;
+
 import GUI.JPanel_QuanLyCuaHangDienThoai.*;
 
-
-import java.awt.EventQueue;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-
-import javax.swing.ImageIcon;
-import java.awt.Color;
-import javax.swing.JLabel;
-import java.awt.Font;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.CardLayout;
-import java.awt.GridLayout;
 
 public class QuanLyKho extends JFrame {
 
@@ -69,6 +59,8 @@ public class QuanLyKho extends JFrame {
 		thongKeGUI = new ThongKeGUI();
 		adminGUI = new AdminGUI();
 
+		setExtendedState(JFrame.MAXIMIZED_BOTH);
+		this.setResizable(true);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 1252, 717);
 		setLocationRelativeTo(null);
@@ -77,19 +69,28 @@ public class QuanLyKho extends JFrame {
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
 		setContentPane(contentPane);
-		contentPane.setLayout(null);
+//		contentPane.setLayout(null);
+		contentPane.setLayout(new BorderLayout());
 
 		JPanel panel_SideMenu = new JPanel();
 		panel_SideMenu.setBackground(new Color(255, 255, 255));
 		panel_SideMenu.setBounds(10, 11, 195, 645);
-		contentPane.add(panel_SideMenu);
+//		contentPane.add(panel_SideMenu);
+		contentPane.add(panel_SideMenu, BorderLayout.WEST);
+		Dimension currentSize = panel_SideMenu.getPreferredSize();
+		panel_SideMenu.setPreferredSize(new Dimension(currentSize.width + 300, currentSize.height));
+		panel_SideMenu.revalidate();
+		panel_SideMenu.repaint();
+
 		panel_SideMenu.setLayout(new GridLayout(0, 1, 0, 0));
 
 		JPanel panel_content = new JPanel();
-        panel_content.setBackground(new Color(255, 255, 255));
+        panel_content.setBackground(Color.PINK);
         panel_content.setBounds(215, 11, 1001, 645);
-        contentPane.add(panel_content);
-        panel_content.setLayout(new CardLayout(0, 0));
+//        contentPane.add(panel_content);
+		contentPane.add(panel_content, BorderLayout.CENTER);
+
+		panel_content.setLayout(new CardLayout(0, 0));
 
 		JPanel panel_admin = new JPanel();
 		panel_SideMenu.add(panel_admin);
@@ -97,22 +98,25 @@ public class QuanLyKho extends JFrame {
 
 		JLabel lbl_admin = new JLabel("Admin " + String.valueOf(idNVHienTai));
 		panel_admin.add(lbl_admin, "name_151773607921700");
-		lbl_admin.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				panel_admin.setBackground(Color.GRAY);
-                selectPanel(panel_admin);
-                panel_content.removeAll();
-                panel_content.add(adminGUI);
+//		lbl_admin.addMouseListener(new MouseAdapter() {
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				panel_admin.setBackground(Color.GRAY);
+//                selectPanel(panel_admin);
+//                panel_content.removeAll();
+//                panel_content.add(adminGUI);
                 panel_content.revalidate();
                 panel_content.repaint();
-			}
-		});
+//			}
+//		});
 		lbl_admin.setFont(new Font("Tahoma", Font.BOLD, 14));
 		lbl_admin.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(QuanLyKho.class.getResource("icon_admin1.png"))));
 
 		JPanel panel_trangChu = new JPanel();
 		panel_SideMenu.add(panel_trangChu);
+		panel_content.add(trangChuGUI);
+		selectPanel(panel_trangChu);
+
 		panel_trangChu.setBackground(new Color(255, 255, 255));
 		panel_trangChu.setLayout(new CardLayout(0, 0));
 
@@ -284,34 +288,10 @@ public class QuanLyKho extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				dispose();
-				JFrame frame = new JFrame();
-		        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		        frame.setSize(900, 460);
-		        frame.getContentPane().add(new Login_GUI());
-		        frame.setVisible(true);
 			}
 		});
 		panel_DangXuat.add(lbl_DangXuat, "name_151622081050900");
 		lbl_DangXuat.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(QuanLyKho.class.getResource("icon_dangxuat.png"))));
-
-
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-//		revalidate();
-//        repaint();
-
 	}
 	private void selectPanel(JPanel panel) {
         if (selectedPanel != null) {

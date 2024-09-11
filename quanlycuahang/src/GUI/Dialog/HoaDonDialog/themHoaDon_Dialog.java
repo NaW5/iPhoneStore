@@ -1,45 +1,19 @@
 package GUI.Dialog.HoaDonDialog;
 
-import javax.swing.JDialog;
+import BUS.*;
+import DTO.*;
 
-import BUS.HoaDonBUS;
-import BUS.KhachHangBUS;
-import BUS.KhuyenMaiBUS;
-import BUS.PhieuBaoHanhBUS;
-import BUS.SanPhamBUS;
-import BUS.ctHoaDonBUS;
-import BUS.ctSanPhamBUS;
-
-import DTO.HoaDonDTO;
-import DTO.KhuyenMaiDTO;
-import DTO.PhieuBaoHanhDTO;
-import DTO.SanPhamDTO;
-import DTO.ctHoaDonDTO;
-import DTO.ctSanPhamDTO;
-
-
-import javax.swing.JTextField;
-import javax.swing.JButton;
-import javax.swing.ImageIcon;
-import javax.swing.JTable;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.JScrollPane;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-
-import java.awt.Font;
-import java.util.ArrayList;
-
-import javax.swing.JComboBox;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.awt.event.ActionEvent;
-import javax.swing.DefaultComboBoxModel;
+import java.util.ArrayList;
 
 public class themHoaDon_Dialog extends JDialog{
 	private JTextField txt_timkiem;

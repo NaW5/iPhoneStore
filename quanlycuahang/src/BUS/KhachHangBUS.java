@@ -103,5 +103,8 @@ public class KhachHangBUS {
     public ArrayList<KhachHangDTO> search(String keyword) {
         return khDAO.search(keyword);
     }
-
+    public int tinhTongSoLuongKhachHang() {
+        return khDAO.getTotalCustomers();
+    }
+//thêm hàm này vô KhachHangBUS
 }

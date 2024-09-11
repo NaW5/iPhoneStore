@@ -1,10 +1,9 @@
 package BUS;
 
-import java.util.ArrayList;
-
-import DAO.SanPhamDAO;
 import DAO.ctSanPhamDAO;
 import DTO.ctSanPhamDTO;
+
+import java.util.ArrayList;
 
 public class ctSanPhamBUS {
     private final ctSanPhamDAO ctsanphamDAO;

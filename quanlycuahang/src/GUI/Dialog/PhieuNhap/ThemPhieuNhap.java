@@ -3,7 +3,10 @@ package GUI.Dialog.PhieuNhap;
 import BUS.PhieuNhapBUS;
 import BUS.SanPhamBUS;
 import BUS.ctSanPhamBUS;
-import DTO.*;
+import DTO.ChiTietPhieuNhapDTO;
+import DTO.PhieuNhapDTO;
+import DTO.SanPhamDTO;
+import DTO.ctSanPhamDTO;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -11,9 +14,12 @@ import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.*;
-import java.util.Date;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ThemPhieuNhap extends JPanel {
 
@@ -260,7 +266,6 @@ public class ThemPhieuNhap extends JPanel {
             String tenSanPham = table_chonSanPham.getValueAt(selectedRow, 1).toString();
             int idSP = Integer.parseInt(idSanPham);
             SanPhamBUS sanPhamBUS = new SanPhamBUS();
-            // chưa
             SanPhamDTO sanPham = sanPhamBUS.laySanPhamTheoId(idSP);
 
             String giaNhap = String.format("%,.0f", sanPham.getGiaNhap());
@@ -276,13 +281,17 @@ public class ThemPhieuNhap extends JPanel {
             Object[] rowData = {idSanPham, tenSanPham, giaNhap, mauSac, ram, rom, soLuong};
             sanPhamModel.addRow(rowData);
         }
-        double tongTien = 0;
+        double tongTien = 0.0;
         DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
-            double donGia = Double.parseDouble(model.getValueAt(i, 2).toString().replace(",", ""));
-            int soLuong = Integer.parseInt(model.getValueAt(i, 6).toString());
-            double tongTienHang = donGia * soLuong;
-            tongTien += tongTienHang;
+            try {
+                double donGia = Double.parseDouble(model.getValueAt(i, 2).toString().replace(",", "").replace(".", ""));
+                int soLuong = Integer.parseInt(model.getValueAt(i, 6).toString());
+                double tongTienHang = donGia * soLuong;
+                tongTien += tongTienHang;
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Giá nhập không hợp lệ!");
+            }
         }
 
         lb_TongTien.setText("Tổng tiền: " + String.format("%,.0f", tongTien));
@@ -313,7 +322,7 @@ public class ThemPhieuNhap extends JPanel {
                 DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
                 model.removeRow(selectedRow);
 
-                double tongTien = 0;
+                double tongTien = 0.0;
                 for (int i = 0; i < model.getRowCount(); i++) {
                     double donGia = Double.parseDouble(model.getValueAt(i, 2).toString().replace(",", ""));
                     int soLuongHang = Integer.parseInt(model.getValueAt(i, 6).toString());
@@ -350,8 +359,14 @@ public class ThemPhieuNhap extends JPanel {
             ctPN.setIdPhieuNhap(Integer.parseInt(idPhieuNhap));
             ctPN.setIdSanPham(Integer.parseInt(idSanPham));
             ctPN.setSoLuong(Integer.parseInt(soLuong));
-            ctPN.setDonGia((float) Double.parseDouble(donGia));
-            ctPN.setThanhTien(Double.parseDouble(donGia) * Integer.parseInt(soLuong));
+            try {
+                String donGiaStr = donGia.replace(",", "").replace(".", "");
+                float donGiaFloat = Float.parseFloat(donGiaStr);
+                ctPN.setDonGia(donGiaFloat);
+                ctPN.setThanhTien(donGiaFloat * Integer.parseInt(soLuong));
+            } catch (NumberFormatException e) {
+                JOptionPane.showMessageDialog(null, "Giá nhập không hợp lệ!");
+            }
             ArrayList<ChiTietPhieuNhapDTO> listCTPN = new ArrayList<>();
             listCTPN.add(ctPN);
             // xong

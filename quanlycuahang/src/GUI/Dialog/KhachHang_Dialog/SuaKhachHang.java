@@ -7,7 +7,8 @@ import DTO.KhachHangDTO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class SuaKhachHang extends JDialog {
     private static final long serialVersionUID = 1L;

@@ -1,12 +1,12 @@
 package DAO;
 
+import DTO.ctSanPhamDTO;
+import config.JDBCUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import DTO.ctSanPhamDTO;
-import config.JDBCUtil;
 
 public class ctSanPhamDAO implements DAOInterface<ctSanPhamDTO> {
     public static ctSanPhamDAO getInstance() {
@@ -151,7 +151,7 @@ public class ctSanPhamDAO implements DAOInterface<ctSanPhamDTO> {
 
     @Override
     public ctSanPhamDTO selectById(int idsp) {
-        ctSanPhamDTO ctSanPham = null;
+        ctSanPhamDTO ctSanPham = new ctSanPhamDTO();
         try {
             Connection con = JDBCUtil.getConnection();
             String sql = "SELECT * FROM ctSanPham WHERE SANPHAM_idSP = ?";

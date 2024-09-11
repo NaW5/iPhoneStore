@@ -34,6 +34,8 @@ public class KhachHangGUI extends JPanel {
                 timKiemKhachHang();
             }
         });
+        btn_timKH.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_timkiem.png"))));
+
         panel.add(btn_timKH);
 
         JButton btn_themKH = new JButton("Thêm");
@@ -42,9 +44,11 @@ public class KhachHangGUI extends JPanel {
                 // Tạo một JDialog để chứa ThemKhachHang_Dialog
 
                 ThemKhachHang themKhachHang = new ThemKhachHang();
+                themKhachHang.setLocationRelativeTo(null);
                 themKhachHang.setVisible(true);
             }
         });
+        btn_themKH.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_them.png"))));
         panel.add(btn_themKH);
 
         JButton btn_suaKH = new JButton("Sửa");
@@ -57,14 +61,14 @@ public class KhachHangGUI extends JPanel {
                     int idKH = (int) model.getValueAt(selectedRow, 0);
                     // Thêm panel SuaKhachHang_Dialog vào dialog
                     SuaKhachHang suaKhachHang = new SuaKhachHang(idKH);
-                    // Hiển thị JDialog
+                    suaKhachHang.setLocationRelativeTo(null);
                     suaKhachHang.setVisible(true);
                 } else {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn khách hàng cần sửa!");
                 }
             }
         });
-
+        btn_suaKH.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_sua.png"))));
         panel.add(btn_suaKH);
 
         JButton btn_xoaKH = new JButton("Xóa");
@@ -88,7 +92,7 @@ public class KhachHangGUI extends JPanel {
                 }
             }
         });
-
+        btn_xoaKH.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_xoa.png"))));
         panel.add(btn_xoaKH);
 
         JButton btnRefresh = new JButton("Tải lại");
@@ -97,6 +101,8 @@ public class KhachHangGUI extends JPanel {
                 loadDataTalbe();
             }
         });
+        btnRefresh.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_tailai.png"))));
+
         panel.add(btnRefresh);
 
         add(panel, BorderLayout.NORTH);

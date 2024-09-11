@@ -3,7 +3,6 @@ package GUI.JPanel_QuanLyCuaHangDienThoai;
 
 import BUS.PhieuNhapBUS;
 import DTO.PhieuNhapDTO;
-
 import GUI.Dialog.PhieuNhap.ChiTietPhieuNhap;
 import GUI.Dialog.PhieuNhap.ThemNhanVienPN;
 import GUI.Dialog.PhieuNhap.ThemPhieuNhap;
@@ -13,10 +12,9 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.io.IOException;
+import java.io.File;
 import java.util.ArrayList;
 
 //import static GUI.Panel.ExcelExporter.exportToExcel;
@@ -58,6 +56,7 @@ public class PhieuNhapGUI extends JPanel {
 		panel.add(txtTimKiem);
 
 		JButton btn_themNhanVien = new JButton("Thêm nhân viên");
+		btn_themNhanVien.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_them.png"))));
 		panel.add(btn_themNhanVien);
 		btn_themNhanVien.addActionListener(new ActionListener() {
 			@Override
@@ -72,9 +71,11 @@ public class PhieuNhapGUI extends JPanel {
 				them();
 			}
 		});
+		btn_them.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_them.png"))));
 		panel.add(btn_them);
 
 		JButton btn_xoa = new JButton("Xóa");
+		btn_xoa.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_xoa.png"))));
 		panel.add(btn_xoa);
 		btn_xoa.addActionListener(new ActionListener() {
 			@Override
@@ -90,9 +91,13 @@ public class PhieuNhapGUI extends JPanel {
 				chiTiet();
 			}
 		});
+		btn_chitiet.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_info.png"))));
+
 		panel.add(btn_chitiet);
 
 		JButton btnRefresh = new JButton("Tải lại");
+		btnRefresh.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_tailai.png"))));
+
 		panel.add(btnRefresh);
 		btnRefresh.addActionListener(new ActionListener() {
 			@Override
@@ -102,19 +107,31 @@ public class PhieuNhapGUI extends JPanel {
 		});
 
 		JButton btn_xuatExcel = new JButton("Xuất Excel");
+		btn_xuatExcel.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_exel.png"))));
 		panel.add(btn_xuatExcel);
-		panel.add(btn_xuatExcel);
-//		btn_xuatExcel.addActionListener(new ActionListener() {
-//			@Override
-//			public void actionPerformed(ActionEvent e) {
-//				try {
-//					exportToExcel(table_PN, "PhieuNhap.xlsx");
-//					JOptionPane.showMessageDialog(null, "Xuất Excel thành công!");
-//				} catch (IOException ex) {
-//					JOptionPane.showMessageDialog(null, "Lỗi khi xuất Excel: " + ex.getMessage());
-//				}
-//			}
-//		});
+
+		btn_xuatExcel.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser jFileChooser = new JFileChooser();
+				jFileChooser.setDialogTitle("Chọn nơi lưu file");
+				int userSelection = jFileChooser.showSaveDialog(null);
+
+				if (userSelection == JFileChooser.APPROVE_OPTION) {
+					File fileToSave = jFileChooser.getSelectedFile();
+					PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+					ArrayList<PhieuNhapDTO> dspn = phieuNhapBUS.loadDataFromDatabase();
+
+					int dialogResult = JOptionPane.showConfirmDialog(null, "Bạn có muốn xuất file Excel không?", "Xác nhận", JOptionPane.YES_NO_OPTION);
+
+					if (dialogResult == JOptionPane.YES_OPTION) {
+						phieuNhapBUS.exportToExcel(dspn, fileToSave.getAbsolutePath());
+						JOptionPane.showMessageDialog(null, "Xuất Excel thành công!");
+					}
+				}
+			}
+		});
+
 
 		add(panel, BorderLayout.NORTH);
 
@@ -147,6 +164,7 @@ public class PhieuNhapGUI extends JPanel {
 		if (selectedRow != -1) {
 			int idPhieuNhap = (int) model.getValueAt(selectedRow, 0);
 			ChiTietPhieuNhap chiTietPhieuNhap_dialog = new ChiTietPhieuNhap(idPhieuNhap);
+			chiTietPhieuNhap_dialog.setLocationRelativeTo(null);
 			chiTietPhieuNhap_dialog.setVisible(true);
 		} else {
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xem chi tiết", "Thông báo", JOptionPane.WARNING_MESSAGE);
@@ -164,6 +182,7 @@ public class PhieuNhapGUI extends JPanel {
 			frame.setSize(1170, 700);
 			ThemPhieuNhap themPhieuNhapPanel = new ThemPhieuNhap(selectedIdPhieuNhap, selectedIdNhanVien);
 			frame.getContentPane().add(themPhieuNhapPanel);
+			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
 
 		} else {
@@ -172,6 +191,7 @@ public class PhieuNhapGUI extends JPanel {
 	}
 	private void themNhanVienVaoPhieu(){
 		ThemNhanVienPN themNhanVienPN_dialog = new ThemNhanVienPN();
+		themNhanVienPN_dialog.setLocationRelativeTo(null);
 		themNhanVienPN_dialog.setVisible(true);
 	}
 	private void xoaPhieuNhap() {
@@ -179,21 +199,26 @@ public class PhieuNhapGUI extends JPanel {
 		DefaultTableModel model = (DefaultTableModel) table_PN.getModel();
 		if (selectedRow != -1) {
 			int idPhieuNhap = (int) model.getValueAt(selectedRow, 0);
-			double tongTien = Double.parseDouble(model.getValueAt(selectedRow, 2).toString().replace(",", ""));
-			if (tongTien > 0) {
-				JOptionPane.showMessageDialog(null, "Không thể xóa phiếu nhập có tổng tiền lớn hơn 0", "Thông báo", JOptionPane.WARNING_MESSAGE);
-			} else {
-				int option = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa phiếu nhập này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-				if (option == JOptionPane.YES_OPTION) {
-					PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-					int result = phieuNhapBUS.deletePhieuNhap(idPhieuNhap);
-					if (result > 0) {
-						JOptionPane.showMessageDialog(null, "Xóa phiếu nhập thành công");
-						loadDataTalbe();
-					} else {
-						JOptionPane.showMessageDialog(null, "Xóa phiếu nhập thất bại");
+			try {
+				String tongTienStr = model.getValueAt(selectedRow, 2).toString().replace(",", "").replace(".", "");
+				double tongTien = Double.parseDouble(tongTienStr);
+				if (tongTien > 0) {
+					JOptionPane.showMessageDialog(null, "Không thể xóa phiếu nhập có tổng tiền lớn hơn 0", "Thông báo", JOptionPane.WARNING_MESSAGE);
+				} else {
+					int option = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa phiếu nhập này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
+					if (option == JOptionPane.YES_OPTION) {
+						PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+						int result = phieuNhapBUS.deletePhieuNhap(idPhieuNhap);
+						if (result > 0) {
+							JOptionPane.showMessageDialog(null, "Xóa phiếu nhập thành công");
+							loadDataTalbe();
+						} else {
+							JOptionPane.showMessageDialog(null, "Xóa phiếu nhập thất bại");
+						}
 					}
 				}
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Giá nhập không hợp lệ!");
 			}
 		} else {
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xóa", "Thông báo", JOptionPane.WARNING_MESSAGE);

@@ -1,9 +1,9 @@
 package BUS;
 
-import java.util.ArrayList;
-
 import DAO.KhuyenMaiDAO;
 import DTO.KhuyenMaiDTO;
+
+import java.util.ArrayList;
 
 public class KhuyenMaiBUS {
     private KhuyenMaiDAO khuyenMaiDAO;

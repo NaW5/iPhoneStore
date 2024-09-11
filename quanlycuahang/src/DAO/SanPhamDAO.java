@@ -1,12 +1,12 @@
 package DAO;
 
+import DTO.SanPhamDTO;
+import config.JDBCUtil;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
-import DTO.SanPhamDTO;
-import config.JDBCUtil;
 
 public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
 
@@ -30,11 +30,9 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             pst.setString(7, t.getMauSac());
             pst.setInt(8, t.getIsDelete());
             ketQua = pst.executeUpdate();
-            System.out.println("Đã thực thi: " + sql);
-            System.out.println("Đã thay đổi " + ketQua + " dòng");
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return ketQua;
     }
@@ -45,15 +43,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         int ketQua = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "UPDATE SanPham " +
-                    "SET tenSP = ?, " +
-                    "giaNhap = ?, " +
-                    "giaBan = ?, " +
-                    "soLuong = ?, " +
-                    "hinhAnh = ?, " +
-                    "mauSac = ?, " +
-                    "isDelete = ? " +
-                    "WHERE idSP = ?";
+            String sql = "UPDATE SanPham " + "SET tenSP = ?, " + "giaNhap = ?, " + "giaBan = ?, " + "soLuong = ?, " + "hinhAnh = ?, " + "mauSac = ?, " + "isDelete = ? " + "WHERE idSP = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, t.getTenSP());
             pst.setFloat(2, t.getGiaBan());
@@ -63,12 +53,10 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             pst.setString(6, t.getMauSac());
             pst.setInt(7, t.getIsDelete());
             pst.setInt(8, t.getIdSP());
-            ketQua = pst.executeUpdate();
-            System.out.println("Đã thực thi: " + sql);
-            System.out.println("Đã thay đổi " + ketQua + " dòng");
+            pst.executeUpdate();
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return ketQua;
     }
@@ -79,17 +67,13 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         int ketQua = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "UPDATE SanPham " +
-                    "SET isDelete = 1 " +
-                    "WHERE idSP = ?";
+            String sql = "UPDATE SanPham " + "SET isDelete = 1 " + "WHERE idSP = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setString(1, idSanPham);
             ketQua = pst.executeUpdate();
-            System.out.println("Đã thực thi: " + sql);
-            System.out.println("Đã thay đổi " + ketQua + " dòng");
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return ketQua;
     }
@@ -108,8 +92,8 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 SanPhamDTO sanPham = new SanPhamDTO();
                 sanPham.setIdSP(rs.getInt("idSP"));
                 sanPham.setTenSP(rs.getString("tenSP"));
-                sanPham.setGiaBan(rs.getInt("giaNhap"));
-                sanPham.setGiaNhap(rs.getInt("giaBan"));
+                sanPham.setGiaBan(rs.getInt("giaBan"));
+                sanPham.setGiaNhap(rs.getInt("giaNhap"));
                 sanPham.setSoLuong(rs.getInt("soLuong"));
                 sanPham.setHinhAnh(rs.getString("hinhAnh"));
                 sanPham.setMauSac(rs.getString("mauSac"));
@@ -118,12 +102,12 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return sanPhamList;
     }
 
-    
+
     public ArrayList<SanPhamDTO> selectAllAll() {
         ArrayList<SanPhamDTO> sanPhamList = new ArrayList<>();
         try {
@@ -136,8 +120,8 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 SanPhamDTO sanPham = new SanPhamDTO();
                 sanPham.setIdSP(rs.getInt("idSP"));
                 sanPham.setTenSP(rs.getString("tenSP"));
-                sanPham.setGiaBan(rs.getInt("giaNhap"));
-                sanPham.setGiaNhap(rs.getInt("giaBan"));
+                sanPham.setGiaBan(rs.getInt("giaBan"));
+                sanPham.setGiaNhap(rs.getInt("giaNhap"));
                 sanPham.setSoLuong(rs.getInt("soLuong"));
                 sanPham.setHinhAnh(rs.getString("hinhAnh"));
                 sanPham.setMauSac(rs.getString("mauSac"));
@@ -146,7 +130,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return sanPhamList;
     }
@@ -164,8 +148,8 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 SanPhamDTO sanPham = new SanPhamDTO();
                 sanPham.setIdSP(rs.getInt("idSP"));
                 sanPham.setTenSP(rs.getString("tenSP"));
-                sanPham.setGiaBan(rs.getInt("giaNhap"));
-                sanPham.setGiaNhap(rs.getInt("giaBan"));
+                sanPham.setGiaBan(rs.getInt("giaBan"));
+                sanPham.setGiaNhap(rs.getInt("giaNhap"));
                 sanPham.setSoLuong(rs.getInt("soLuong"));
                 sanPham.setHinhAnh(rs.getString("hinhAnh"));
                 sanPham.setMauSac(rs.getString("mauSac"));
@@ -174,7 +158,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return sanPhamList;
     }
@@ -194,8 +178,8 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
                 sanPham = new SanPhamDTO();
                 sanPham.setIdSP(rs.getInt("idSP"));
                 sanPham.setTenSP(rs.getString("tenSP"));
-                sanPham.setGiaBan(rs.getInt("giaNhap"));
-                sanPham.setGiaNhap(rs.getInt("giaBan"));
+                sanPham.setGiaBan(rs.getInt("giaBan"));
+                sanPham.setGiaNhap(rs.getInt("giaNhap"));
                 sanPham.setSoLuong(rs.getInt("soLuong"));
                 sanPham.setHinhAnh(rs.getString("hinhAnh"));
                 sanPham.setMauSac(rs.getString("mauSac"));
@@ -203,7 +187,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return sanPham;
     }
@@ -218,11 +202,10 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             pst.setInt(1, soluong);
             pst.setInt(2, masp);
             ketQua = pst.executeUpdate();
-            System.out.println("Đã thực thi: " + sql);
-            System.out.println("Đã thay đổi " + ketQua + " dòng");
+
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return ketQua;
     }
@@ -241,10 +224,11 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
 
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return totalQuantity;
     }
+
     public int updateSoLuong(int idSanPham, int soLuongNhap) {
         String sql = "UPDATE sanpham SET soLuong = soLuong + ? WHERE idSP = ?";
         try {
@@ -258,6 +242,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
         }
         return idSanPham;
     }
+
     public ArrayList<SanPhamDTO> selectALLChiTiet() {
         ArrayList<SanPhamDTO> sanPhamList = new ArrayList<>();
         try {
@@ -280,7 +265,7 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
             }
             JDBCUtil.closeConnection(con);
         } catch (SQLException e) {
-            Logger.getLogger(SanPhamDAO.class.getName()).log(Level.SEVERE, null, e);
+            e.printStackTrace();
         }
         return sanPhamList;
     }

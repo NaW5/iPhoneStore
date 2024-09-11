@@ -27,4 +27,9 @@ public class TaiKhoanBUS {
     public int delete(int idNv) {
         return tkDAO.delete(idNv);
     }
+
+    public int insert(TaiKhoanDTO tk) {
+        return tkDAO.insert(tk);
+    }
+
 }
