@@ -185,8 +185,8 @@ public class ThemNhanVien extends JDialog {
         }
 
         // Kiểm tra xem số điện thoại có đúng 10 số hay không
-        if (sdt.length() != 10) {
-            JOptionPane.showMessageDialog(null, "Số điện thoại phải có đúng 10 số!");
+        if (sdt.length() != 10 || !sdt.matches("[0-9]*") ) {
+            JOptionPane.showMessageDialog(null, "Số điện thoại phải đúng 10 số và không chứa ký tự khác số!");
             return false;
         }
         return true;

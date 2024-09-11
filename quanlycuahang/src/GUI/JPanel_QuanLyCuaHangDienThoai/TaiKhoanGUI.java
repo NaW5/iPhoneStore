@@ -1,11 +1,10 @@
-package GUI.Panel;
+package GUI.JPanel_QuanLyCuaHangDienThoai;
 
 
-import BUS.TaiKhoanBUS;
+
 import DAO.TaiKhoanDAO;
 import DTO.TaiKhoanDTO;
-import GUI.Dialog.SuaNhanVien;
-import GUI.Dialog.SuaTaiKhoan;
+import GUI.Dialog.TaiKhoan_Dialog.SuaTaiKhoan;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,17 +13,16 @@ import java.awt.event.ActionEvent;
 import java.util.ArrayList;
 import javax.swing.table.DefaultTableModel;
 
-public class TaiKhoan extends JPanel {
+public class TaiKhoanGUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
     private JTable table_Tk;
     DefaultTableModel tblModel;
-    public TaiKhoanBUS tkBUS = new TaiKhoanBUS();
-
+    public TaiKhoanDAO tkDAO = new TaiKhoanDAO();
     private JTextField jTxt_timKiem;
 
 
-    public TaiKhoan() {
+    public TaiKhoanGUI() {
         setLayout(new BorderLayout());
         JPanel panel_btn = new JPanel(new FlowLayout(FlowLayout.LEFT));
         String[] columnNames = {
@@ -55,6 +53,7 @@ public class TaiKhoan extends JPanel {
                     String chucVu = (String) model.getValueAt(row, 3);
                     int idNv = (int) model.getValueAt(row, 4);
                     SuaTaiKhoan suaTaiKhoan = new SuaTaiKhoan(idNv, tenDangNhap, matKhau, chucVu);
+
                     suaTaiKhoan.setVisible(true);
                 }else{
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn nhân viên cần sửa");
@@ -73,7 +72,7 @@ public class TaiKhoan extends JPanel {
                     int confirm = JOptionPane.showConfirmDialog(null, "Bạn chắc chắn muốn xóa tài khoản của nhân viên có ID: " + idNv + "?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
                     if (confirm == JOptionPane.YES_OPTION) {
                         // Update the isVisible status of the employee to 0 instead of deleting
-                        tkBUS.delete(idNv);
+                        TaiKhoanDAO.getInstance().delete(String.valueOf(idNv));
                         loadDataTable();
                     }
                 }else{
@@ -104,47 +103,25 @@ public class TaiKhoan extends JPanel {
 
 
     }
-//    public void loadDataTable(){
-//        ArrayList<TaiKhoanDTO> dsnv = tkDAO.selectAll();
-//        tblModel.setRowCount(0);
-//        for(TaiKhoanDTO tk : dsnv){
-//            tblModel.addRow(new Object[]{
-//                    tk.getUseName(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
-//            });
-//        }
-//    }
-//    public void timKiemNhanVien(){
-//        String key = jTxt_timKiem.getText().trim();
-//        if(key.isEmpty()){
-//            loadDataTable();
-//        }else {
-//            ArrayList<TaiKhoanDTO> dsnv = tkDAO.search(key);
-//            tblModel.setRowCount(0);
-//            for(TaiKhoanDTO nv : dsnv) {
-//                tblModel.addRow(new Object[]{
-//                        nv.getUseName(), nv.getMatKhau(), nv.getTrangThai(), nv.getChucVu(), nv.getNHANVIEN_idNV()});
-//            }
-//        }
-//    }
-public void loadDataTable(){
-    ArrayList<TaiKhoanDTO> dsnv = tkBUS.selectAll();
-    tblModel.setRowCount(0);
-    for(TaiKhoanDTO tk : dsnv){
-        tblModel.addRow(new Object[]{
-                tk.getUseName(), tk.getMatKhau(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
-        });
+    public void loadDataTable(){
+        ArrayList<TaiKhoanDTO> dsnv = tkDAO.selectAll();
+        tblModel.setRowCount(0);
+        for(TaiKhoanDTO tk : dsnv){
+            tblModel.addRow(new Object[]{
+                    tk.getUsername(), tk.getPassword(), tk.getTrangThai(), tk.getChucVu(), tk.getNHANVIEN_idNV()
+            });
+        }
     }
-}
     public void timKiemNhanVien(){
         String key = jTxt_timKiem.getText().trim();
         if(key.isEmpty()){
             loadDataTable();
         }else {
-            ArrayList<TaiKhoanDTO> dsnv = tkBUS.search(key);
+            ArrayList<TaiKhoanDTO> dsnv = tkDAO.search(key);
             tblModel.setRowCount(0);
             for(TaiKhoanDTO nv : dsnv) {
                 tblModel.addRow(new Object[]{
-                        nv.getUseName(), nv.getMatKhau(), nv.getTrangThai(), nv.getChucVu(), nv.getNHANVIEN_idNV()});
+                        nv.getUsername(), nv.getPassword(), nv.getTrangThai(), nv.getChucVu(), nv.getNHANVIEN_idNV()});
             }
         }
     }
