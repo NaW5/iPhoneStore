@@ -30,7 +30,7 @@ public class xemDSKH_Dialog extends JDialog {
     }
 
     public xemDSKH_Dialog() {
-
+        setModal(true);
         String[] columnNames = {"Mã khách hàng", "Tên khách hàng", "Địa chỉ", "Số điện thoại"};
         tblModel = new DefaultTableModel(columnNames, 0);
         getContentPane().setLayout(null);
