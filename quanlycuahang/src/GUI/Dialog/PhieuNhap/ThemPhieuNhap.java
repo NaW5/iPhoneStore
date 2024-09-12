@@ -34,14 +34,12 @@ public class ThemPhieuNhap extends JPanel {
     private final JTextField textField_giaNhap;
     public JTable table_sanPham;
     Label lb_TongTien;
-    private int idPN;
-    private int idNV;
     private DefaultTableModel defaultTableModel;
 
     /**
      * Create the panel.
      */
-    public ThemPhieuNhap() {
+    public ThemPhieuNhap(int idPN, int idNV) {
         setLayout(null);
 
         JPanel panel = new JPanel();
@@ -62,6 +60,7 @@ public class ThemPhieuNhap extends JPanel {
         panel_1.add(lblNewLabel);
 
         textField_IdPhieuNhap = new JTextField();
+        textField_IdPhieuNhap.setText(String.valueOf(idPN));
         textField_IdPhieuNhap.setFont(new Font("Tahoma", Font.BOLD, 14));
         textField_IdPhieuNhap.setEditable(false);
         textField_IdPhieuNhap.setBackground(new Color(233, 236, 237));
@@ -75,6 +74,7 @@ public class ThemPhieuNhap extends JPanel {
         panel_1.add(lblNhnVinNhp);
 
         textField_NhanVien = new JTextField();
+        textField_NhanVien.setText(String.valueOf(idNV));
         textField_NhanVien.setFont(new Font("Tahoma", Font.BOLD, 14));
         textField_NhanVien.setEditable(false);
         textField_NhanVien.setColumns(10);
@@ -257,6 +257,17 @@ public class ThemPhieuNhap extends JPanel {
         panel_2.add(scrollPane_1);
 
         defaultTableModel = (DefaultTableModel) table_chonSanPham.getModel();
+
+        SanPhamBUS sanPhamBUS = new SanPhamBUS();
+        ArrayList<SanPhamDTO> products = sanPhamBUS.layDanhSachTatCaChiTietSanPham();
+        DefaultTableModel chonSPModel = (DefaultTableModel) table_chonSanPham.getModel();
+        for (SanPhamDTO product : products) {
+            // xong
+            ctSanPhamBUS ctSanPhamBUS = new ctSanPhamBUS();
+            ctSanPhamDTO ctSanPham = ctSanPhamBUS.timctSanPhamTheoId(product.getIdSP());
+            Object[] rowData = {product.getIdSP(), product.getTenSP(), product.getSoLuong(), product.getMauSac(), ctSanPham.getRam(), ctSanPham.getRom() };
+            chonSPModel.addRow(rowData);
+        }
     }
 
     private void themTableSanPham(){
@@ -341,13 +352,20 @@ public class ThemPhieuNhap extends JPanel {
         String tongTien = lb_TongTien.getText().replaceAll("\\D", "");
         Date thoiGian = new Date();
         PhieuNhapDTO pnDTO = new PhieuNhapDTO();
+        pnDTO.setIdPhieuNhap(Integer.parseInt(idPhieuNhap));
         pnDTO.setThoiGian(thoiGian);
+        pnDTO.setTongTien(Integer.parseInt(tongTien));
+        pnDTO.setIdNhanVien(Integer.parseInt(idNhanVien));
+        PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+        //nếu idPhieuNhap này chưa có trong database thì thêm vào
+        if(phieuNhapBUS.kiemTraTonTaiIdPhieuNhap(Integer.parseInt(idPhieuNhap)) == false){
+            phieuNhapBUS.addPhieuNhap(pnDTO);
+        }
 
         if (table_sanPham.getRowCount() == 0) {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn ít nhất một sản phẩm để nhập.");
             return;
         }
-
 
         DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
         for (int i = 0; i < model.getRowCount(); i++) {
@@ -370,7 +388,6 @@ public class ThemPhieuNhap extends JPanel {
             ArrayList<ChiTietPhieuNhapDTO> listCTPN = new ArrayList<>();
             listCTPN.add(ctPN);
             // xong
-            PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
             phieuNhapBUS.add(listCTPN);
 
             SanPhamBUS sanPhamBUS = new SanPhamBUS();
@@ -378,30 +395,11 @@ public class ThemPhieuNhap extends JPanel {
             sanPhamBUS.capNhapSoLuongKhiNhapHang(Integer.parseInt(idSanPham), Integer.parseInt(soLuong));
         }
         // xong
-        PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
         phieuNhapBUS.getupdateTongTien(Integer.parseInt(idPhieuNhap), Integer.parseInt(tongTien));
         // xong
         lb_TongTien.setText("Tổng tiền: 0");
         phieuNhapBUS.getupdateTongTien(Integer.parseInt(idPhieuNhap),0);
         model.setRowCount(0);
         JOptionPane.showMessageDialog(null, "Nhập hàng thành công.");
-    }
-
-    public ThemPhieuNhap(int idPN, int idNV){
-        this();
-        this.idPN = idPN;
-        this.idNV = idNV;
-        textField_IdPhieuNhap.setText(String.valueOf(idPN));
-        textField_NhanVien.setText(String.valueOf(idNV));
-        SanPhamBUS sanPhamBUS = new SanPhamBUS();
-        ArrayList<SanPhamDTO> products = sanPhamBUS.layDanhSachTatCaChiTietSanPham();
-        DefaultTableModel chonSPModel = (DefaultTableModel) table_chonSanPham.getModel();
-        for (SanPhamDTO product : products) {
-            // xong
-            ctSanPhamBUS ctSanPhamBUS = new ctSanPhamBUS();
-            ctSanPhamDTO ctSanPham = ctSanPhamBUS.timctSanPhamTheoId(product.getIdSP());
-            Object[] rowData = {product.getIdSP(), product.getTenSP(), product.getSoLuong(), product.getMauSac(), ctSanPham.getRam(), ctSanPham.getRom() };
-            chonSPModel.addRow(rowData);
-        }
     }
 }

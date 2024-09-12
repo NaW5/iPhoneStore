@@ -44,7 +44,6 @@ public class themHoaDon_Dialog extends JDialog{
 			tblModel.addRow(new Object[]{sp.getIdSP(), sp.getTenSP()});
 		}
 	}
-//Sửa chỗ này
 	public void setSelectedCustomerId(int selectedCustomerId) {
 		txt_idKH.setText(String.valueOf(selectedCustomerId));
 	}
