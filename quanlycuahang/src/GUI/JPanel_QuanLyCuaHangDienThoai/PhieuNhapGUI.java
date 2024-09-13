@@ -1,6 +1,5 @@
 package GUI.JPanel_QuanLyCuaHangDienThoai;
 
-
 import BUS.PhieuNhapBUS;
 import DTO.PhieuNhapDTO;
 import GUI.Dialog.PhieuNhap.ChiTietPhieuNhap;
@@ -17,14 +16,12 @@ import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.ArrayList;
 
-//import static GUI.Panel.ExcelExporter.exportToExcel;
-
 public class PhieuNhapGUI extends JPanel {
 	private JTable table_PN;
 	private DefaultTableModel tblModel;
 	private JTextField txtTimKiem;
 
-	public PhieuNhapGUI() {
+	public PhieuNhapGUI(int idNVHienTai) {
 		setLayout(new BorderLayout());
 		JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT));
 
@@ -55,34 +52,15 @@ public class PhieuNhapGUI extends JPanel {
 		});
 		panel.add(txtTimKiem);
 
-		JButton btn_themNhanVien = new JButton("Thêm nhân viên");
-		btn_themNhanVien.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_them.png"))));
-		panel.add(btn_themNhanVien);
-		btn_themNhanVien.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				themNhanVienVaoPhieu();
-			}
-		});
 		JButton btn_them = new JButton("Thêm phiếu nhập");
 		btn_them.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				them();
+				them(idNVHienTai);
 			}
 		});
 		btn_them.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_them.png"))));
 		panel.add(btn_them);
-
-		JButton btn_xoa = new JButton("Xóa");
-		btn_xoa.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_xoa.png"))));
-		panel.add(btn_xoa);
-		btn_xoa.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				xoaPhieuNhap();
-			}
-		});
 
 		JButton btn_chitiet = new JButton("Chi tiết");
 		btn_chitiet.addActionListener(new ActionListener() {
@@ -92,12 +70,10 @@ public class PhieuNhapGUI extends JPanel {
 			}
 		});
 		btn_chitiet.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_info.png"))));
-
 		panel.add(btn_chitiet);
 
 		JButton btnRefresh = new JButton("Tải lại");
 		btnRefresh.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage(SanPhamGUI.class.getResource("icon_tailai.png"))));
-
 		panel.add(btnRefresh);
 		btnRefresh.addActionListener(new ActionListener() {
 			@Override
@@ -132,7 +108,6 @@ public class PhieuNhapGUI extends JPanel {
 			}
 		});
 
-
 		add(panel, BorderLayout.NORTH);
 
 		String[] columnNames = {"Mã phiếu nhập", "Mã nhân viên", "Tổng tiền"};
@@ -150,6 +125,7 @@ public class PhieuNhapGUI extends JPanel {
 		add(scrollPane, BorderLayout.CENTER);
 		loadDataTalbe();
 	}
+
 	public void loadDataTalbe() {
 		ArrayList<PhieuNhapDTO> PhieuNhapList = new PhieuNhapBUS().loadDataFromDatabase();
 		tblModel.setRowCount(0);
@@ -158,6 +134,7 @@ public class PhieuNhapGUI extends JPanel {
 			tblModel.addRow(new Object[]{phieuNhap.getIdPhieuNhap(), phieuNhap.getIdNhanVien(), tongTien});
 		}
 	}
+
 	private void chiTiet(){
 		int selectedRow = table_PN.getSelectedRow();
 		DefaultTableModel model = (DefaultTableModel) table_PN.getModel();
@@ -170,11 +147,11 @@ public class PhieuNhapGUI extends JPanel {
 			JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xem chi tiết", "Thông báo", JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	private void them(){
+
+	private void them(int idNVHienTai){
 		int selectedRow = table_PN.getSelectedRow();
 		DefaultTableModel model = (DefaultTableModel) table_PN.getModel();
 		if (selectedRow != -1) {
-
 			int selectedIdPhieuNhap = (int) model.getValueAt(selectedRow, 0);
 			int selectedIdNhanVien = (int) model.getValueAt(selectedRow, 1);
 
@@ -184,56 +161,20 @@ public class PhieuNhapGUI extends JPanel {
 			frame.getContentPane().add(themPhieuNhapPanel);
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
-
 		} else {
-			JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để thêm", "Thông báo", JOptionPane.WARNING_MESSAGE);
+			PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+			JFrame frame = new JFrame("Thêm Phiếu Nhập");
+			frame.setSize(1170, 700);
+			ThemPhieuNhap themPhieuNhapPanel = new ThemPhieuNhap(phieuNhapBUS.getMaxIdPhieuNhap()+1, idNVHienTai);
+			frame.getContentPane().add(themPhieuNhapPanel);
+			frame.setLocationRelativeTo(null);
+			frame.setVisible(true);
 		}
 	}
+
 	private void themNhanVienVaoPhieu(){
 		ThemNhanVienPN themNhanVienPN_dialog = new ThemNhanVienPN();
 		themNhanVienPN_dialog.setLocationRelativeTo(null);
 		themNhanVienPN_dialog.setVisible(true);
 	}
-	private void xoaPhieuNhap() {
-		int selectedRow = table_PN.getSelectedRow();
-		DefaultTableModel model = (DefaultTableModel) table_PN.getModel();
-		if (selectedRow != -1) {
-			int idPhieuNhap = (int) model.getValueAt(selectedRow, 0);
-			try {
-				String tongTienStr = model.getValueAt(selectedRow, 2).toString().replace(",", "").replace(".", "");
-				double tongTien = Double.parseDouble(tongTienStr);
-				if (tongTien > 0) {
-					JOptionPane.showMessageDialog(null, "Không thể xóa phiếu nhập có tổng tiền lớn hơn 0", "Thông báo", JOptionPane.WARNING_MESSAGE);
-				} else {
-					int option = JOptionPane.showConfirmDialog(null, "Bạn có chắc chắn muốn xóa phiếu nhập này?", "Xác nhận xóa", JOptionPane.YES_NO_OPTION);
-					if (option == JOptionPane.YES_OPTION) {
-						PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-						int result = phieuNhapBUS.deletePhieuNhap(idPhieuNhap);
-						if (result > 0) {
-							JOptionPane.showMessageDialog(null, "Xóa phiếu nhập thành công");
-							loadDataTalbe();
-						} else {
-							JOptionPane.showMessageDialog(null, "Xóa phiếu nhập thất bại");
-						}
-					}
-				}
-			} catch (NumberFormatException e) {
-				JOptionPane.showMessageDialog(null, "Giá nhập không hợp lệ!");
-			}
-		} else {
-			JOptionPane.showMessageDialog(null, "Vui lòng chọn một phiếu nhập để xóa", "Thông báo", JOptionPane.WARNING_MESSAGE);
-		}
-	}
-
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(() -> {
-			JFrame frame = new JFrame("Quản lý phiếu nhập");
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			frame.setSize(820, 400);
-			PhieuNhapGUI phieuNhapGUI = new PhieuNhapGUI();
-			frame.getContentPane().add(phieuNhapGUI);
-			frame.setVisible(true);
-		});
-	}
 }
-

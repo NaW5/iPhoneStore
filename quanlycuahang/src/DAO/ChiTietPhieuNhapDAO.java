@@ -16,20 +16,33 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         return new ChiTietPhieuNhapDAO();
     }
 
+    // In ChiTietPhieuNhapDAO.java
     @Override
     public int insert(ArrayList<ChiTietPhieuNhapDTO> t) {
         int ketQua = 0;
-        for (int i = 0; i < t.size(); i++) {
+        for (ChiTietPhieuNhapDTO chiTiet : t) {
             try {
-                Connection con =  JDBCUtil.getConnection();
-                String sql = "INSERT INTO ctphieunhapkho(soLuong, donGia, thanhTien, PHIEUNHAP_idPhieuNhap, SANPHAM_idSP) VALUES (?,?,?,?,?)";
+                Connection con = JDBCUtil.getConnection();
+                String checkSql = "SELECT COUNT(*) FROM phieunhapkho WHERE idPhieuNhap = ?";
+                PreparedStatement checkPst = con.prepareStatement(checkSql);
+                checkPst.setInt(1, chiTiet.getIdPhieuNhap());
+                ResultSet rs = checkPst.executeQuery();
+                if (rs.next() && rs.getInt(1) == 0) {
+                    // Insert into phieunhapkho if not exists
+                    String insertPhieuNhapSql = "INSERT INTO phieunhapkho(idPhieuNhap) VALUES (?)";
+                    PreparedStatement insertPhieuNhapPst = con.prepareStatement(insertPhieuNhapSql);
+                    insertPhieuNhapPst.setInt(1, chiTiet.getIdPhieuNhap());
+                    insertPhieuNhapPst.executeUpdate();
+                }
+                // Insert into ctphieunhapkho
+                String sql = "INSERT INTO ctphieunhapkho(PHIEUNHAP_idPhieuNhap, SANPHAM_idSP, soLuong, donGia, thanhTien) VALUES (?,?,?,?,?)";
                 PreparedStatement pst = con.prepareStatement(sql);
-                pst.setInt(1, t.get(i).getSoLuong());
-                pst.setFloat(2, t.get(i).getDonGia());
-                pst.setDouble(3, t.get(i).getThanhTien());
-                pst.setInt(4, t.get(i).getIdPhieuNhap());
-                pst.setInt(5, t.get(i).getIdSanPham());
-                ketQua = pst.executeUpdate();
+                pst.setInt(1, chiTiet.getIdPhieuNhap());
+                pst.setInt(2, chiTiet.getIdSanPham());
+                pst.setInt(3, chiTiet.getSoLuong());
+                pst.setFloat(4, chiTiet.getDonGia());
+                pst.setDouble(5, chiTiet.getThanhTien());
+                ketQua += pst.executeUpdate();
                 JDBCUtil.closeConnection(con);
             } catch (SQLException ex) {
                 Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);

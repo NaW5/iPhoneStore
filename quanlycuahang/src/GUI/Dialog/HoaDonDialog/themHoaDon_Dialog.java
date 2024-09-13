@@ -44,7 +44,6 @@ public class themHoaDon_Dialog extends JDialog{
 			tblModel.addRow(new Object[]{sp.getIdSP(), sp.getTenSP()});
 		}
 	}
-//Sửa chỗ này
 	public void setSelectedCustomerId(int selectedCustomerId) {
 		txt_idKH.setText(String.valueOf(selectedCustomerId));
 	}
@@ -166,7 +165,7 @@ public class themHoaDon_Dialog extends JDialog{
 		txt_maHD.setColumns(10);
 		txt_maHD.setBounds(907, 103, 94, 27);
 		getContentPane().add(txt_maHD);
-
+		txt_maHD.setEnabled(false);
 
 
 		JLabel lbl_NV = new JLabel("Nhân viên");
@@ -176,7 +175,7 @@ public class themHoaDon_Dialog extends JDialog{
 
 		//tên của người đang đăng nhập
 		txt_idNV_admin = new JTextField(String.valueOf(idNVHienTai));
-		txt_idNV_admin.setEditable(false);
+		txt_idNV_admin.setEnabled(false);
 		txt_idNV_admin.setColumns(10);
 		txt_idNV_admin.setBounds(907, 188, 132, 27);
 		getContentPane().add(txt_idNV_admin);

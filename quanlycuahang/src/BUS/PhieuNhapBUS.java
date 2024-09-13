@@ -39,6 +39,11 @@ public class PhieuNhapBUS {
         return ctPhieuNhapDAO.selectAll(Integer.toString(idPhieuNhap));
     }
 
+    //get max id
+    public int getMaxIdPhieuNhap() {
+        return phieunhapDAO.getMaxIdPhieuNhap();
+    }
+
     public ArrayList<ChiTietPhieuDTO> getChiTietPhieu_Type(int idPhieuNhap) {
         ArrayList<ChiTietPhieuNhapDTO> arr = ctPhieuNhapDAO.selectAll(Integer.toString(idPhieuNhap));
         ArrayList<ChiTietPhieuDTO> ketQua = new ArrayList<>();
@@ -129,5 +134,14 @@ public class PhieuNhapBUS {
     }
     public void exportToExcel(ArrayList<PhieuNhapDTO> dspn, String filePath) {
         phieunhapDAO.exportToExcel(dspn, filePath);
+    }
+
+    public boolean kiemTraTonTaiIdPhieuNhap(int i) {
+        for (PhieuNhapDTO pn : listPhieuNhap) {
+            if (pn.getIdPhieuNhap() == i) {
+                return true;
+            }
+        }
+        return false;
     }
 }

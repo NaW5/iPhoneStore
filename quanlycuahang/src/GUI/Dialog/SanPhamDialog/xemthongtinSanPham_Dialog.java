@@ -97,7 +97,7 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 		getContentPane().add(lbl_soluong);
 
 		txt_soluong = new JTextField(String.valueOf(spdto.getSoLuong()));
-		txt_soluong.setEditable(false);
+		txt_soluong.setEnabled(false);
 		txt_soluong.setColumns(10);
 		txt_soluong.setBounds(315, 332, 129, 30);
 		getContentPane().add(txt_soluong);

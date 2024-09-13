@@ -106,7 +106,15 @@ public class themSanPham_Dialog extends JDialog{
 		txt_giaban.setBounds(384, 246, 129, 30);
 		getContentPane().add(txt_giaban);
 
+		JLabel lbl_IMEI = new JLabel("Mã IMEI");
+		lbl_IMEI.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lbl_IMEI.setBounds(384, 307, 93, 14);
+		getContentPane().add(lbl_IMEI);
 
+		JTextField txt_IMEI = new JTextField();
+		txt_IMEI.setColumns(10);
+		txt_IMEI.setBounds(384, 331, 129, 30);
+		getContentPane().add(txt_IMEI);
 
 		JLabel lbl_mausac = new JLabel("Màu sắc");
 		lbl_mausac.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -201,31 +209,22 @@ public class themSanPham_Dialog extends JDialog{
 		JButton btn_them = new JButton("Thêm");
 		btn_them.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Định nghĩa biểu thức chính quy cho các dạng sản phẩm
 				String pattern = "^(iPhone)\\s(11|12|13|14|15|X|XS|XR|XS\\sMax)(\\s(Plus|Pro|mini))?(\\s\\(\\d{4}\\))?$";
-
-				// Kiểm tra đầu vào với biểu thức chính quy
 				Pattern regex = Pattern.compile(pattern);
 				Matcher matcher = regex.matcher(txt_tensp.getText());
-
-
 				if(!matcher.find()) {
 					JOptionPane.showMessageDialog(null, "Tên sản phẩm không hợp lệ");
 				}
-
 				else if(!isNumeric(txt_gianhap.getText())) {
 					JOptionPane.showMessageDialog(null, "Giá nhập phải là số");
 				}
-
 				else if(!isNumeric(txt_giaban.getText())) {
 					JOptionPane.showMessageDialog(null, "Giá bán phải là số");
 				}
-				else if(txt_chip.getText().equals("") || txt_pin.getText().equals("") || txt_hdh.getText().equals("") || txt_camerasau.getText().equals("") || txt_cameratruoc.getText().equals("") || imagePath.equals("")) {
+				else if(txt_chip.getText().equals("") || txt_pin.getText().equals("") || txt_hdh.getText().equals("") || txt_camerasau.getText().equals("") || txt_cameratruoc.getText().equals("") || imagePath.equals("") || txt_IMEI.getText().equals("")) {
 					JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
 				}
 				else {
-					// Sửa phần này nha tú.ơ..................................................................................
-
 					int idsp = SanPhamDAO.getInstance().selectAllAll().get(SanPhamDAO.getInstance().selectAllAll().size()-1).getIdSP() +1;
 					String tensp = txt_tensp.getText();
 					int giaNhap = Integer.parseInt(txt_gianhap.getText());
@@ -234,7 +233,6 @@ public class themSanPham_Dialog extends JDialog{
 					String hinhAnh =  extractString.catLinkAnh(imagePath);
 					SanPhamDTO spdto = new SanPhamDTO(idsp, tensp, giaNhap, giaBan, 0, hinhAnh, mauSac, 0);
 					spBUS.themSanPham(spdto);
-
 
 					String chip = txt_chip.getText();
 					String pin = txt_pin.getText();
@@ -248,7 +246,7 @@ public class themSanPham_Dialog extends JDialog{
 					ctSanPhamDTO ctspdto = new ctSanPhamDTO(chip, pin, manHinh, hdh, cameraSau, cameraTruoc, ram, rom, SANPHAM_idSP);
 					ctspBUS.themctSanPham(ctspdto);
 
-					int maIMEI = IMEIDAO.getInstance().selectAll().get(IMEIDAO.getInstance().selectAll().size()-1).getMaIMEI() +1;
+					int maIMEI = Integer.parseInt(txt_IMEI.getText());
 					IMEIDTO imei = new IMEIDTO(maIMEI, idsp);
 					imeiBUS.themIMEI(imei);
 				}
@@ -335,9 +333,15 @@ public class themSanPham_Dialog extends JDialog{
 		getContentPane().add(txt_giaban);
 		txt_giaban.setEditable(false);
 
+		JLabel lbl_IMEI = new JLabel(" Mã IMEI");
+		lbl_IMEI.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lbl_IMEI.setBounds(384, 307, 93, 14);
+		getContentPane().add(lbl_IMEI);
 
-
-
+		JTextField txt_IMEI = new JTextField();
+		txt_IMEI.setColumns(10);
+		txt_IMEI.setBounds(384, 331, 129, 30);
+		getContentPane().add(txt_IMEI);
 
 		JLabel lbl_mausac = new JLabel("Màu sắc");
 		lbl_mausac.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -350,6 +354,7 @@ public class themSanPham_Dialog extends JDialog{
 		getContentPane().add(cbb_mausac);
 		cbb_mausac.setSelectedItem(spdto.getMauSac());
 		cbb_mausac.setEditable(false);
+
 		JLabel lbl_chip = new JLabel("Chip xử lý");
 		lbl_chip.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lbl_chip.setBounds(607, 142, 93, 14);
@@ -445,7 +450,7 @@ public class themSanPham_Dialog extends JDialog{
 		btn_them.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Thêm mới vào bảng IMEI
-				int maIMEI = imeiBUS.layDanhSachIMEI().get(imeiBUS.layDanhSachIMEI().size() - 1).getMaIMEI() + 1;
+				int maIMEI = Integer.parseInt(txt_IMEI.getText());
 				IMEIDTO IMEI = new IMEIDTO(maIMEI, idSP, 0);
 				imeiBUS.themIMEI(IMEI);
 			}
@@ -463,17 +468,5 @@ public class themSanPham_Dialog extends JDialog{
 		getContentPane().add(btn_huybo);
 	}
 
-	public static void main(String[] args) {
-		// Tạo một JFrame để chứa JDialog
-		JFrame frame = new JFrame();
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.setSize(400, 300);
-
-		// Hiển thị JDialog
-		themSanPham_Dialog dialog = new themSanPham_Dialog();
-		dialog.setSize(1000, 500);
-		dialog.setLocationRelativeTo(frame);
-		dialog.setVisible(true);
-	}
 }
 

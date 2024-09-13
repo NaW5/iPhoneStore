@@ -17,20 +17,20 @@ import java.util.logging.Logger;
 
 import static config.JDBCUtil.getConnection;
 
-
 public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
     public static PhieuNhapDAO getInstance() {
         return new PhieuNhapDAO();
     }
+
     @Override
     public int insert(PhieuNhapDTO pnDTO) {
         int ketqua = 0;
         try {
-            Connection con = getConnection();
+            Connection con = JDBCUtil.getConnection();
             String sql = "INSERT INTO phieunhapkho(idPhieuNhap, thoiGian, tongTien, NHANVIEN_idNV) VALUES (?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, pnDTO.getIdPhieuNhap());
-            pst.setDate(2, (Date) pnDTO.getThoiGian());
+            pst.setDate(2, new java.sql.Date(pnDTO.getThoiGian().getTime())); // Convert java.util.Date to java.sql.Date
             pst.setDouble(3, pnDTO.getTongTien());
             pst.setInt(4, pnDTO.getIdNhanVien());
             ketqua = pst.executeUpdate();
@@ -46,7 +46,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         try {
             Connection con = getConnection();
             String sql = "UPDATE phieunhapkho SET idPhieuNhap = ?, thoiGian = ?, tongTien = ?, NHANVIEN_idNV = ? WHERE idPhieuNhap = ?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, pnDTO.getIdPhieuNhap());
             pst.setTimestamp(2, new Timestamp(pnDTO.getThoiGian().getTime()));
             pst.setDouble(3, pnDTO.getTongTien());
@@ -78,6 +78,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         return ketqua;
     }
+
     @Override
     public ArrayList<PhieuNhapDTO> selectAll() {
         ArrayList<PhieuNhapDTO> ketqua = new ArrayList<>();
@@ -85,13 +86,13 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
             Connection con = getConnection();
             String sql = "SELECT * FROM phieunhapkho ORDER BY idPhieuNhap DESC";
             PreparedStatement pst = con.prepareStatement(sql);
-            ResultSet rs =  pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int idPhieuNhap = rs.getInt("idPhieuNhap");
                 Date thoigiantao = rs.getDate("thoiGian");
                 double tongtien = rs.getDouble("tongTien");
                 int idNhanVien = rs.getInt("NHANVIEN_idNV");
-                PhieuNhapDTO phieunhap = new PhieuNhapDTO(idPhieuNhap,thoigiantao, tongtien, idNhanVien);
+                PhieuNhapDTO phieunhap = new PhieuNhapDTO(idPhieuNhap, thoigiantao, tongtien, idNhanVien);
                 ketqua.add(phieunhap);
             }
             JDBCUtil.closeConnection(con);
@@ -99,15 +100,16 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         return ketqua;
     }
+
     @Override
     public PhieuNhapDTO selectById(int chonIdPhieuNhap) {
         PhieuNhapDTO ketqua = null;
         try {
             Connection con = getConnection();
             String sql = "SELECT * FROM phieunhapkho WHERE idPhieuNhap = ?";
-            PreparedStatement pst =  con.prepareStatement(sql);
+            PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, chonIdPhieuNhap);
-            ResultSet rs =  pst.executeQuery();
+            ResultSet rs = pst.executeQuery();
             while (rs.next()) {
                 int idPhieuNhap = rs.getInt("idPhieuNhap");
                 Date thoiGian = rs.getDate("thoiGian");
@@ -144,11 +146,12 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         return ketqua;
     }
+
     public int getAutoIncrement() {
         int result = -1;
         try {
             Connection con = (Connection) getConnection();
-            String sql = "SELECT AUTO_INCREMENT FROM  INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlykhohang' AND TABLE_NAME = 'phieunhapkho'";
+            String sql = "SELECT AUTO_INCREMENT FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'quanlykhohang' AND TABLE_NAME = 'phieunhapkho'";
             PreparedStatement pst = (PreparedStatement) con.prepareStatement(sql);
             ResultSet rs2 = pst.executeQuery(sql);
             if (!rs2.isBeforeFirst()) {
@@ -163,6 +166,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         return result;
     }
+
     public int updateTongTien(int idPhieuNhap, double tongTien) {
         int ketQua = 0;
         try {
@@ -178,6 +182,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         return ketQua;
     }
+
     public ArrayList<PhieuNhapDTO> selectAllActive() {
         ArrayList<PhieuNhapDTO> phieuNhapList = new ArrayList<>();
         try {
@@ -201,6 +206,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
         return phieuNhapList;
     }
+
     public void exportToExcel(ArrayList<PhieuNhapDTO> dspn, String filePath) {
         Workbook workbook = new XSSFWorkbook();
         Sheet sheet = workbook.createSheet("Phiếu nhập");
@@ -232,4 +238,20 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         }
     }
 
+    public int getMaxIdPhieuNhap() {
+        int maxId = -1;
+        try {
+            Connection con = getConnection();
+            String sql = "SELECT MAX(idPhieuNhap) AS maxId FROM phieunhapkho";
+            PreparedStatement pst = con.prepareStatement(sql);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                maxId = rs.getInt("maxId");
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException ex) {
+            Logger.getLogger(PhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return maxId;
+    }
 }

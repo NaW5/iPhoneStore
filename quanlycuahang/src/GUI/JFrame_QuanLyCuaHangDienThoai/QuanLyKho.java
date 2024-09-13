@@ -53,7 +53,7 @@ public class QuanLyKho extends JFrame {
 		hoaDonGUI = new HoaDonGUI(idNVHienTai);
 		khachHangGUI = new KhachHangGUI();
 		nhanVienGUI = new NhanVienGUI();
-		phieuNhapGUI = new PhieuNhapGUI();
+		phieuNhapGUI = new PhieuNhapGUI(idNVHienTai);
 		trangChuGUI = new TrangChuGUI();
 		taiKhoanGUI = new TaiKhoanGUI();
 		thongKeGUI = new ThongKeGUI();
