@@ -256,10 +256,8 @@ public class suaSanPham_Dialog extends JDialog{
 						hinhAnh = extractString.catLinkAnh(imagePath);
 					}
 					String mauSac = (String) cbb_mausac.getSelectedItem();
-					SanPhamDTO spdto = new SanPhamDTO(idsp, tensp, giaNhap, giaBan, soLuong, hinhAnh, mauSac, 0);
+					SanPhamDTO spdto = new SanPhamDTO(idsp, tensp, giaBan, giaNhap, soLuong, hinhAnh, mauSac, 0);
 					SanPhamDAO.getInstance().update(spdto);
-					////Sửa chỗ này///////////////////////////////////////////////////////////////////////////////////////////////
-
 
 					String chip = txt_chip.getText();
 					String pin = txt_chip.getText();

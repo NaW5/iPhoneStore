@@ -10,23 +10,20 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class xemDanhSachImeiSanPham_Dialog extends JDialog{
+public class xemDanhSachImeiSanPham_Dialog extends JDialog {
 	private JTable table_ctsp;
 	DefaultTableModel tblModel;
 
-
 	public void loadDataTalbe(int idSP) {
 		ArrayList<IMEIDTO> result = IMEIDAO.getInstance().selectByCondition("SANPHAM_idSP = " + idSP);
-		// Sửa phần này nha tú.ơ..................................................................................
-
 		tblModel.setRowCount(0);
 		for (IMEIDTO sp : result) {
-			tblModel.addRow(new Object[]{sp.getMaIMEI(), sp.getIdPhieuNhap(), sp.getIdPhieuXuat(), sp.getSANPHAM_idSP(), sp.getTrangThai()});
+			tblModel.addRow(new Object[]{sp.getMaIMEI(), sp.getSANPHAM_idSP(), sp.getIdPhieuNhap()});
 		}
 	}
 
 	public xemDanhSachImeiSanPham_Dialog(int idSP) {
-		String[] columnNames = {"Mã IMEI", "Mã phiếu nhập", "Mã phiếu xuất", "Mã sản phẩm", "Trạng thái"};
+		String[] columnNames = {"Mã IMEI", "Mã sản phẩm", "Mã phiếu nhập"};
 		tblModel = new DefaultTableModel(columnNames, 0);
 		loadDataTalbe(idSP);
 		getContentPane().setLayout(null);
@@ -42,12 +39,11 @@ public class xemDanhSachImeiSanPham_Dialog extends JDialog{
 		});
 		panel_ctsp.setLayout(null);
 
-
 		btn_huybo.setBounds(491, 488, 63, 23);
 		panel_ctsp.add(btn_huybo);
 
 		table_ctsp = new JTable(tblModel);
-		JScrollPane scrollPane = new JScrollPane(table_ctsp); // Tạo JScrollPane và đặt table_SP vào đó
+		JScrollPane scrollPane = new JScrollPane(table_ctsp);
 		scrollPane.setBounds(62, 50, 672, 427);
 		table_ctsp.getTableHeader().setBackground(Color.LIGHT_GRAY);
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
@@ -56,7 +52,7 @@ public class xemDanhSachImeiSanPham_Dialog extends JDialog{
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
 		gbc_scrollPane.gridx = 0;
 		gbc_scrollPane.gridy = 1;
-		panel_ctsp.add(scrollPane); // Thêm JScrollPane chứa table_SP vào panel_SanPham
+		panel_ctsp.add(scrollPane);
 
 		JButton btn_tailai = new JButton("Tải lại");
 		btn_tailai.addActionListener(new ActionListener() {
@@ -75,10 +71,9 @@ public class xemDanhSachImeiSanPham_Dialog extends JDialog{
 					DefaultTableModel model = (DefaultTableModel) table_ctsp.getModel();
 					int maIMEI = (int) model.getValueAt(selectedRow, 0);
 					xoaCTSP_Dialog spdialog = new xoaCTSP_Dialog(maIMEI);
-					spdialog.setSize(500,300);
+					spdialog.setSize(500, 300);
 					spdialog.setVisible(true);
-				}
-				else {
+				} else {
 					JOptionPane.showMessageDialog(null, "Vui lòng chọn IMEI cần xóa!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
 				}
 			}
@@ -92,8 +87,5 @@ public class xemDanhSachImeiSanPham_Dialog extends JDialog{
 		lbl_DSImei.setBackground(new Color(128, 255, 255));
 		lbl_DSImei.setBounds(10, 11, 775, 17);
 		panel_ctsp.add(lbl_DSImei);
-
-
 	}
 }
-

@@ -23,7 +23,11 @@ public class IMEIDAO implements DAOInterface<IMEIDTO> {
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, t.getMaIMEI());
             pst.setInt(2, t.getSANPHAM_idSP());
-            pst.setInt(3, 5501);
+            if (t.getIdPhieuNhap() == null) {
+                pst.setNull(3, Types.INTEGER);
+            } else {
+                pst.setInt(3, t.getIdPhieuNhap());
+            }
             pst.setInt(4, t.getTrangThai());
             ketQua = pst.executeUpdate();
             System.out.println("Đã thực thi: " + sql);
