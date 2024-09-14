@@ -10,10 +10,19 @@ import GUI.Dialog.HoaDonDialog.themHoaDon_Dialog;
 import GUI.Dialog.HoaDonDialog.xemHoaDon_Dialog;
 import GUI.Dialog.HoaDonDialog.xoaHoaDon_Dialog;
 import GUI.Dialog.SanPhamDialog.themSanPham_Dialog;
-import com.itextpdf.text.Document;
-import com.itextpdf.text.DocumentException;
-import com.itextpdf.text.Paragraph;
-import com.itextpdf.text.pdf.PdfWriter;
+import com.itextpdf.io.exceptions.IOException;
+import com.itextpdf.io.font.PdfEncodings;
+import com.itextpdf.kernel.font.PdfFont;
+import com.itextpdf.kernel.font.PdfFontFactory;
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Cell;
+import com.itextpdf.layout.element.Paragraph;
+import com.itextpdf.layout.element.Table;
+import com.itextpdf.layout.element.Text;
+import com.itextpdf.layout.properties.TextAlignment;
+import com.itextpdf.layout.properties.UnitValue;
 import com.toedter.calendar.JDateChooser;
 
 import javax.swing.*;
@@ -34,8 +43,6 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
-import com.itextpdf.text.*;
-import com.itextpdf.text.pdf.*;
 public class HoaDonGUI extends JPanel {
 
     private static final long serialVersionUID = 1L;
@@ -72,42 +79,142 @@ public class HoaDonGUI extends JPanel {
         return str;
     }
 
-    private void createStyledPDF(Document document, HoaDonDTO hoaDonDTO, NhanVienBUS nvBUS, KhachHangBUS khBUS, ctHoaDonBUS cthdBUS, SanPhamBUS spBUS) throws DocumentException {
-        com.itextpdf.text.Font boldFont = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.TIMES_ROMAN, 12, com.itextpdf.text.Font.BOLD);
-        com.itextpdf.text.Font regularFont = new com.itextpdf.text.Font(com.itextpdf.text.Font.FontFamily.TIMES_ROMAN, 12, com.itextpdf.text.Font.NORMAL);
+public void createStyledPDF(PdfDocument pdfDoc, HoaDonDTO hoaDonDTO, NhanVienBUS nvBUS, KhachHangBUS khBUS, ctHoaDonBUS cthdBUS, SanPhamBUS spBUS) throws IOException {
+    Document document = new Document(pdfDoc);
 
-        document.add(new Paragraph("Thông tin hóa đơn", boldFont));
-        document.add(new Paragraph("Mã hóa đơn: " + hoaDonDTO.getIdHoaDon(), regularFont));
-        document.add(new Paragraph("Thời gian lập: " + hoaDonDTO.getThoiGian(), regularFont));
-        document.add(new Paragraph("Tên nhân viên: " + nvBUS.selectById(hoaDonDTO.getNHANVIEN_idNV()).getHoTen(), regularFont));
-        document.add(new Paragraph("Tên khách hàng: " + khBUS.selectKh(hoaDonDTO.getKHACHHANG_idKH()).getTenKhachHang(), regularFont));
-        document.add(new Paragraph("Tổng tiền: " + hoaDonDTO.getTongTien(), regularFont));
-        document.add(new Paragraph(" ")); // Add a blank line
-
-        document.add(new Paragraph("Chi tiết hóa đơn:", boldFont));
-        PdfPTable table = new PdfPTable(3); // 3 columns
-        table.setWidthPercentage(100);
-        table.setSpacingBefore(10f);
-        table.setSpacingAfter(10f);
-
-        PdfPCell cell1 = new PdfPCell(new Paragraph("Sản phẩm", boldFont));
-        PdfPCell cell2 = new PdfPCell(new Paragraph("Số lượng", boldFont));
-        PdfPCell cell3 = new PdfPCell(new Paragraph("Đơn giá", boldFont));
-        table.addCell(cell1);
-        table.addCell(cell2);
-        table.addCell(cell3);
-
-        ctHoaDonDTO chiTiet = cthdBUS.getCTHoaDonById(hoaDonDTO.getIdHoaDon());
-        table.addCell(new Paragraph(spBUS.laySanPhamTheoId(chiTiet.getSANPHAM_idSP()).getTenSP(), regularFont));
-        table.addCell(new Paragraph(String.valueOf(chiTiet.getSoLuong()), regularFont));
-        table.addCell(new Paragraph(String.valueOf(chiTiet.getDonGia()), regularFont));
-
-        document.add(table);
-        document.add(new Paragraph("-----------------------------------", regularFont));
+    // Thêm font hỗ trợ tiếng việt
+    PdfFont boldFont = null;
+    PdfFont regularFont = null;
+    try {
+        boldFont = PdfFontFactory.createFont("fonts/Roboto-Bold.ttf", PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
+        regularFont = PdfFontFactory.createFont("fonts/Roboto-Regular.ttf", PdfEncodings.IDENTITY_H, PdfFontFactory.EmbeddingStrategy.PREFER_EMBEDDED);
+    } catch (java.io.IOException e) {
+        e.printStackTrace();
     }
 
+    // Header Section
+    document.add(new Paragraph("IPHONE STORE")
+            .setFont(boldFont)
+            .setFontSize(16)
+            .setTextAlignment(TextAlignment.CENTER));
+
+    document.add(new Paragraph("Địa chỉ: 273 An Dương Vương, Phường 3, Quận 5, TP. Hồ Chí Minh")
+            .setFont(regularFont)
+            .setTextAlignment(TextAlignment.CENTER));
+    document.add(new Paragraph("Số điện thoại: 0333555678")
+            .setFont(regularFont)
+            .setTextAlignment(TextAlignment.CENTER));
+    document.add(new Paragraph("Email: contact@iphonestor.com")
+            .setFont(regularFont)
+            .setTextAlignment(TextAlignment.CENTER));
+    document.add(new Paragraph("Website: www.iphonestore.com")
+            .setFont(regularFont)
+            .setTextAlignment(TextAlignment.CENTER));
+    document.add(new Paragraph(" ")
+            .setFont(regularFont));
+
+    // Invoice Title
+    document.add(new Paragraph("HÓA ĐƠN THANH TOÁN")
+                    .setFont(boldFont)
+                    .setFontSize(18)
+                    .setTextAlignment(TextAlignment.CENTER));
+    document.add(new Paragraph(" ")
+                    .setFont(regularFont));
+
+    // Invoice Details
+    document.add(new Paragraph()
+                    .add(new Text("Mã hóa đơn: ").setFont(boldFont))
+                    .add(new Text("" + hoaDonDTO.getIdHoaDon()).setFont(regularFont)));
+    document.add(new Paragraph()
+                    .add(new Text("Ngày lập hóa đơn: ").setFont(boldFont))
+                    .add(new Text("" + hoaDonDTO.getThoiGian()).setFont(regularFont)));
+    document.add(new Paragraph()
+                    .add(new Text("Tên nhân viên: ").setFont(boldFont))
+                    .add(new Text("" + nvBUS.selectById(hoaDonDTO.getNHANVIEN_idNV()).getHoTen()).setFont(regularFont)));
+    document.add(new Paragraph()
+                    .add(new Text("Tên khách hàng: ").setFont(boldFont))
+                    .add(new Text("" + khBUS.selectKh(hoaDonDTO.getKHACHHANG_idKH()).getTenKhachHang()).setFont(regularFont)));
+    document.add(new Paragraph(" ")
+                    .setFont(regularFont));
+
+    // Invoice Details Section
+    document.add(new Paragraph("Chi tiết hóa đơn")
+                    .setFont(boldFont)
+                    .setFontSize(14));
+
+    // Create and configure the table
+    float[] columnWidths = {4f, 2f, 2f, 2f}; // Four columns: Product, Quantity, Unit Price, Total Price
+    Table table = new Table(UnitValue.createPercentArray(columnWidths)).useAllAvailableWidth();
+
+    // Table Header
+    table.addHeaderCell(new Cell().add(new Paragraph("Sản phẩm").setFont(boldFont))
+            .setTextAlignment(TextAlignment.CENTER));
+    table.addHeaderCell(new Cell().add(new Paragraph("Số lượng").setFont(boldFont))
+            .setTextAlignment(TextAlignment.CENTER));
+    table.addHeaderCell(new Cell().add(new Paragraph("Đơn giá").setFont(boldFont))
+            .setTextAlignment(TextAlignment.CENTER));
+    table.addHeaderCell(new Cell().add(new Paragraph("Thành tiền").setFont(boldFont))
+            .setTextAlignment(TextAlignment.CENTER));
+
+    // Add data rows
+    ctHoaDonDTO chiTiet = cthdBUS.getCTHoaDonById(hoaDonDTO.getIdHoaDon());
+    double totalAmount = 0.0;
+
+    for (ctHoaDonDTO item : cthdBUS.getCTHoaDonByCondition("HOADON_idHoaDon = " + hoaDonDTO.getIdHoaDon())) {
+        String productName = spBUS.laySanPhamTheoId(item.getSANPHAM_idSP()).getTenSP();
+        int quantity = item.getSoLuong();
+        double unitPrice = item.getDonGia();
+        double itemTotal = quantity * unitPrice;
+        totalAmount += itemTotal;
+
+        table.addCell(new Cell().add(new Paragraph(productName).setFont(regularFont)));
+        table.addCell(new Cell().add(new Paragraph(String.valueOf(quantity))
+                .setFont(regularFont))
+                .setTextAlignment(TextAlignment.CENTER));
+        table.addCell(new Cell().add(new Paragraph(new DecimalFormat("###,###,###").format(unitPrice) + " VND")
+                .setFont(regularFont))
+                .setTextAlignment(TextAlignment.CENTER));
+        table.addCell(new Cell().add(new Paragraph(new DecimalFormat("###,###,###").format(itemTotal) + " VND")
+                .setFont(regularFont))
+                .setTextAlignment(TextAlignment.CENTER));
+    }
+
+    // Add total amount to table
+    table.addCell(new Cell(1, 3).add(new Paragraph("Tổng cộng")
+            .setFont(boldFont))
+            .setTextAlignment(TextAlignment.RIGHT));
+    table.addCell(new Cell().add(new Paragraph(new DecimalFormat("###,###,###").format(totalAmount) + " VND")
+            .setFont(boldFont))
+            .setTextAlignment(TextAlignment.CENTER));
+
+    // Add table to the document
+    document.add(table);
+    document.add(new Paragraph("Tổng tiền: " + new DecimalFormat("###,###,###").format(hoaDonDTO.getTongTien()) + " VND")
+            .setFont(boldFont));
+    // Footer Section
+    document.add(new Paragraph(" ")
+            .setFont(regularFont));
+    document.add(new Paragraph("Cảm ơn quý khách đã sử dụng dịch vụ của chúng tôi!")
+            .setFont(regularFont));
+    document.add(new Paragraph("Hãy liên hệ với chúng tôi nếu có bất kỳ câu hỏi nào.")
+            .setFont(regularFont));
+    document.add(new Paragraph(" ")
+            .setFont(regularFont));
+    document.add(new Paragraph("Chân thành cảm ơn,")
+            .setFont(regularFont));
+    document.add(new Paragraph("IPHONE STORE")
+            .setFont(regularFont));
+
+    // Optionally add payment terms or additional notes
+    document.add(new Paragraph("Ghi chú: Thanh toán trong vòng 7 ngày kể từ ngày hóa đơn.")
+            .setFont(regularFont));
+
+    // Close document
+    document.close();
+}
+
     public void loadDataTalbe() {
-        DecimalFormat df = new DecimalFormat("#,###.##");
+        DecimalFormat df = new DecimalFormat("###,###,###");
         ArrayList<HoaDonDTO> result = hoaDonBUS.getAllHoaDon();
         System.out.println("Number of records retrieved: " + result.size());
         tblModel.setRowCount(0); // Clear existing data
@@ -119,7 +226,7 @@ public class HoaDonGUI extends JPanel {
     }
 
     public void loadDataTalbeByCondition(String t) {
-        DecimalFormat df = new DecimalFormat("#,###.##");
+        DecimalFormat df = new DecimalFormat("###,###,###");
         ArrayList<HoaDonDTO> result = hoaDonBUS.getHoaDonByCondition(t);
         System.out.println("Number of records retrieved: " + result.size());
         tblModel.setRowCount(0); // Clear existing data
@@ -246,7 +353,7 @@ public class HoaDonGUI extends JPanel {
                 new Object[][] {
                 },
                 new String[] {
-                        "M\u00E3 h\u00F3a \u0111\u01A1n", "Th\u1EDDi gian l\u1EADp", "T\u1ED5ng ti\u1EC1n", "T\u00EAn nh\u00E2n vi\u00EAn", "T\u00EAn kh\u00E1ch h\u00E0ng"
+                        "Mã hóa đơn", "Thời gian lập", "Tổng tiền", "Tên nhân viên", "Tên khách hàng"
                 }
         ));
         table_HD = new JTable(tblModel);
@@ -290,34 +397,41 @@ public class HoaDonGUI extends JPanel {
             public void actionPerformed(ActionEvent e) {
                 int selectedRow = table_HD.getSelectedRow();
                 if (selectedRow != -1) {
-                    try {
-                        // Tạo một instance của JFileChooser
-                        JFileChooser fileChooser = new JFileChooser();
+                    JFileChooser fileChooser = new JFileChooser();
+                    int result = fileChooser.showSaveDialog(null);
 
-                        // Hiển thị hộp thoại lưu file
-                        int result = fileChooser.showSaveDialog(null);
+                    if (result == JFileChooser.APPROVE_OPTION) {
+                        String filePath = fileChooser.getSelectedFile().getAbsolutePath();
 
-                        // Kiểm tra nếu người dùng đã chọn nơi lưu và bấm nút "Lưu"
-                        if (result == JFileChooser.APPROVE_OPTION) {
-                            // Lấy đường dẫn đã chọn bởi người dùng
-                            String filePath = fileChooser.getSelectedFile().getAbsolutePath();
+                        try {
+                            // Create a PdfWriter instance
+                            PdfWriter writer = new PdfWriter(filePath + ".pdf");
+                            PdfDocument pdfDoc = new PdfDocument(writer);
+                            Document document = new Document(pdfDoc);
 
-                            // Tiếp tục xử lý như bình thường, sử dụng đường dẫn đã chọn để lưu file PDF
+                            // Fetch data and create PDF content
                             DefaultTableModel model = (DefaultTableModel) table_HD.getModel();
                             int idhd = (int) model.getValueAt(selectedRow, 0);
                             HoaDonDTO hoaDonDTO = hoaDonBUS.getHoaDonById(idhd);
-                            Document document = new Document();
-                            PdfWriter.getInstance(document, new FileOutputStream(filePath + ".pdf"));
-                            document.open();
-                            NhanVienBUS nvBUS =  new NhanVienBUS();
+
+                            // Initialize your BUS classes
+                            NhanVienBUS nvBUS = new NhanVienBUS();
                             KhachHangBUS khBUS = new KhachHangBUS();
-                            createStyledPDF(document, hoaDonDTO, nvBUS, khBUS, new ctHoaDonBUS(), new SanPhamBUS());
+                            ctHoaDonBUS cthdBUS = new ctHoaDonBUS();
+                            SanPhamBUS spBUS = new SanPhamBUS();
+
+                            // Create styled PDF
+                            createStyledPDF(pdfDoc, hoaDonDTO, nvBUS, khBUS, cthdBUS, spBUS);
+
+                            // Close the document
                             document.close();
+
                             JOptionPane.showMessageDialog(null, "Xuất PDF thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+
+                        } catch (IOException | FileNotFoundException ex) {
+                            ex.printStackTrace();
+                            JOptionPane.showMessageDialog(null, "Xuất PDF thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                         }
-                    } catch (FileNotFoundException | DocumentException ex) {
-                        ex.printStackTrace();
-                        JOptionPane.showMessageDialog(null, "Xuất PDF thất bại!", "Lỗi", JOptionPane.ERROR_MESSAGE);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "Vui lòng chọn hóa đơn cần xuất PDF!", "Cảnh báo", JOptionPane.WARNING_MESSAGE);
