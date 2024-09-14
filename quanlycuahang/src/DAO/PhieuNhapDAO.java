@@ -171,7 +171,7 @@ public class PhieuNhapDAO implements DAOInterface<PhieuNhapDTO> {
         int ketQua = 0;
         try {
             Connection con = getConnection();
-            String sql = "UPDATE phieunhapkho SET tongTien = tongTien + ? WHERE idPhieuNhap = ?";
+            String sql = "UPDATE phieunhapkho SET tongTien = ? WHERE idPhieuNhap = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setDouble(1, tongTien);
             pst.setInt(2, idPhieuNhap);

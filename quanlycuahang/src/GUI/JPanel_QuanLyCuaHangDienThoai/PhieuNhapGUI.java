@@ -14,6 +14,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 public class PhieuNhapGUI extends JPanel {
@@ -46,7 +47,8 @@ public class PhieuNhapGUI extends JPanel {
 				tblModel.setRowCount(0);
 				for (PhieuNhapDTO phieuNhap : searchResult) {
 					String tongTien = String.format("%,.0f", phieuNhap.getTongTien());
-					tblModel.addRow(new Object[]{phieuNhap.getIdPhieuNhap(), phieuNhap.getIdNhanVien(), tongTien});
+					String thoiGian = new SimpleDateFormat("dd/MM/yyyy").format(phieuNhap.getThoiGian());
+					tblModel.addRow(new Object[]{phieuNhap.getIdPhieuNhap(), phieuNhap.getIdNhanVien(), tongTien, thoiGian});
 				}
 			}
 		});
@@ -110,13 +112,14 @@ public class PhieuNhapGUI extends JPanel {
 
 		add(panel, BorderLayout.NORTH);
 
-		String[] columnNames = {"Mã phiếu nhập", "Mã nhân viên", "Tổng tiền"};
+		String[] columnNames = {"Mã phiếu nhập", "Mã nhân viên", "Tổng tiền", "Thời gian"};
 		tblModel = new DefaultTableModel(columnNames, 0);
 
 		table_PN = new JTable(tblModel);
 		table_PN.getColumnModel().getColumn(0).setPreferredWidth(100);
 		table_PN.getColumnModel().getColumn(1).setPreferredWidth(150);
 		table_PN.getColumnModel().getColumn(2).setPreferredWidth(200);
+		table_PN.getColumnModel().getColumn(3).setPreferredWidth(150);
 
 		Font font = table_PN.getFont().deriveFont(Font.PLAIN, 14);
 		table_PN.setFont(font);
@@ -131,7 +134,8 @@ public class PhieuNhapGUI extends JPanel {
 		tblModel.setRowCount(0);
 		for (PhieuNhapDTO phieuNhap : PhieuNhapList) {
 			String tongTien = String.format("%,.0f", phieuNhap.getTongTien());
-			tblModel.addRow(new Object[]{phieuNhap.getIdPhieuNhap(), phieuNhap.getIdNhanVien(), tongTien});
+			String thoiGian = new SimpleDateFormat("dd/MM/yyyy").format(phieuNhap.getThoiGian());
+			tblModel.addRow(new Object[]{phieuNhap.getIdPhieuNhap(), phieuNhap.getIdNhanVien(), tongTien, thoiGian});
 		}
 	}
 
@@ -170,11 +174,5 @@ public class PhieuNhapGUI extends JPanel {
 			frame.setLocationRelativeTo(null);
 			frame.setVisible(true);
 		}
-	}
-
-	private void themNhanVienVaoPhieu(){
-		ThemNhanVienPN themNhanVienPN_dialog = new ThemNhanVienPN();
-		themNhanVienPN_dialog.setLocationRelativeTo(null);
-		themNhanVienPN_dialog.setVisible(true);
 	}
 }

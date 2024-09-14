@@ -131,5 +131,22 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
     }
 
 
-
+    public int themChiTietPhieuNhap(int soLuong, int donGia, int thanhTien, int phieunhapIdPhieuNhap, int sanphamIdSP) {
+        int ketQua = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "INSERT INTO ctphieunhapkho(soLuong, donGia, thanhTien,PHIEUNHAP_idPhieuNhap, SANPHAM_idSP) VALUES (?,?,?,?,?)";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, soLuong);
+            pst.setFloat(2, donGia);
+            pst.setDouble(3, thanhTien);
+            pst.setInt(4, phieunhapIdPhieuNhap);
+            pst.setInt(5, sanphamIdSP);
+            ketQua = pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException ex) {
+            Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return ketQua;
+    }
 }

@@ -22,8 +22,19 @@ public class IMEIBUS {
         return result > 0;
     }
 
+    //update idPhieuNhap
+    public boolean updateIdPhieuNhap(int maIMEI, int idPhieuNhap) {
+        int result = imeiDAO.updateIdPhieuNhap(maIMEI, idPhieuNhap);
+        return result > 0;
+    }
+
+    //delete by phieu nhap
+    public boolean updatePhieuNhap0(int idPhieuNhap) {
+        int result = imeiDAO.updatePhieuNhap0(idPhieuNhap);
+        return result > 0;
+    }
     public boolean xoaIMEI(String maIMEI) {
-        int result = imeiDAO.delete(maIMEI);
+        int result = imeiDAO.updatePhieuNhap0(Integer.parseInt(maIMEI));
         return result > 0;
     }
 
@@ -37,5 +48,17 @@ public class IMEIBUS {
 
     public IMEIDTO timIMEITheoId(int id) {
         return imeiDAO.selectById(id);
+    }
+
+    public ArrayList<IMEIDTO> layDanhSachIMEITheoSanPham(int idSP) {
+        return imeiDAO.selectAllIMEIBySanPham(idSP);
+    }
+
+    public boolean kiemTraTrungIMEI(int maIMEI) {
+        return imeiDAO.kiemTraTrungIMEI(maIMEI);
+    }
+
+    public ArrayList<IMEIDTO> layDanhSachIMEITheoPhieuNhap(int inPN) {
+        return imeiDAO.selectAllIMEIByPhieuNhap(inPN);
     }
 }

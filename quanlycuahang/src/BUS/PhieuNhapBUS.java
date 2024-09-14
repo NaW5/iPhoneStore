@@ -91,9 +91,7 @@ public class PhieuNhapBUS {
     public ArrayList<ChiTietPhieuNhapDTO> getCTPhieuNhapById(int idPhieuNhap){
         return ctPhieuNhapDAO.selectById_ctp(idPhieuNhap);
     }
-    public int getupdateTongTien(int idPhieuNhap, double tongTien) {
-        return phieunhapDAO.updateTongTien(idPhieuNhap, tongTien);
-    }
+
     public int add(ArrayList<ChiTietPhieuNhapDTO> ctpn) {
         return ctPhieuNhapDAO.insert(ctpn);
     }
@@ -143,5 +141,14 @@ public class PhieuNhapBUS {
             }
         }
         return false;
+    }
+
+    public ArrayList<ChiTietPhieuNhapDTO> layDanhSachChiTietPhieuNhapTheoIdPhieuNhap(int inPN) {
+        return ctPhieuNhapDAO.selectById_ctp(inPN);
+    }
+
+
+    public void updateTongTienBy(int idPhieuNhap, double tongTien) {
+        phieunhapDAO.updateTongTien(idPhieuNhap, tongTien);
     }
 }

@@ -86,7 +86,6 @@ public class IMEIDAO implements DAOInterface<IMEIDTO> {
     }
 
 
-
     @Override
     public ArrayList<IMEIDTO> selectAll() {
         ArrayList<IMEIDTO> ctsanPhamList = new ArrayList<>();
@@ -162,7 +161,106 @@ public class IMEIDAO implements DAOInterface<IMEIDTO> {
     }
 
 
+    public ArrayList<IMEIDTO> selectAllIMEIBySanPham(int idSP) {
+        ArrayList<IMEIDTO> ctsanPhamList = new ArrayList<>();
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT * FROM IMEI WHERE SANPHAM_idSP = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idSP);
+            ResultSet rs = pst.executeQuery();
 
+            while (rs.next()) {
+                IMEIDTO sanPham = new IMEIDTO();
+                sanPham.setMaIMEI(rs.getInt("maIMEI"));
+                sanPham.setSANPHAM_idSP(rs.getInt("SANPHAM_idSP"));
+                sanPham.setIdPhieuNhap(rs.getInt("idPhieuNhap"));
+                sanPham.setTrangThai(rs.getInt("trangThai"));
+                ctsanPhamList.add(sanPham);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return ctsanPhamList;
+    }
 
+    public boolean kiemTraTrungIMEI(int maIMEI) {
+        boolean exists = false;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT 1 FROM IMEI WHERE maIMEI = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, maIMEI);
+            ResultSet rs = pst.executeQuery();
+            exists = rs.next();
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return exists;
+    }
 
+    public ArrayList<IMEIDTO> selectAllIMEIByPhieuNhap(int inPN) {
+        ArrayList<IMEIDTO> IMEIList = new ArrayList<>();
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT * FROM IMEI WHERE idPhieuNhap = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, inPN);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                IMEIDTO imei = new IMEIDTO();
+                imei.setMaIMEI(rs.getInt("maIMEI"));
+                imei.setSANPHAM_idSP(rs.getInt("SANPHAM_idSP"));
+                imei.setIdPhieuNhap(rs.getInt("idPhieuNhap"));
+                imei.setTrangThai(rs.getInt("trangThai"));
+                IMEIList.add(imei);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return IMEIList;
+    }
+
+    public int updateIdPhieuNhap(int maIMEI, int idPhieuNhap) {
+        int ketQua = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "UPDATE IMEI " +
+                    "SET idPhieuNhap = ? " +
+                    "WHERE maIMEI = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idPhieuNhap);
+            pst.setInt(2, maIMEI);
+            ketQua = pst.executeUpdate();
+            System.out.println("Đã thực thi: " + sql);
+            System.out.println("Đã thay đổi " + ketQua + " dòng");
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return ketQua;
+    }
+
+    public int updatePhieuNhap0(int idPhieuNhap) {
+        int ketQua = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "UPDATE IMEI " +
+                    "SET idPhieuNhap = NULL " +
+                    "WHERE idPhieuNhap = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idPhieuNhap);
+            ketQua = pst.executeUpdate();
+            System.out.println("Đã thực thi: " + sql);
+            System.out.println("Đã thay đổi " + ketQua + " dòng");
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return ketQua;
+    }
 }

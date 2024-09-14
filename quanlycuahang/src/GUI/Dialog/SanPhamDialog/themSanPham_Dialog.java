@@ -449,10 +449,19 @@ public class themSanPham_Dialog extends JDialog{
 		JButton btn_them = new JButton("Thêm");
 		btn_them.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Thêm mới vào bảng IMEI
-				int maIMEI = Integer.parseInt(txt_IMEI.getText());
-				IMEIDTO IMEI = new IMEIDTO(maIMEI, idSP, 0);
-				imeiBUS.themIMEI(IMEI);
+				try {
+					int maIMEI = Integer.parseInt(txt_IMEI.getText());
+					boolean existingIMEI = imeiBUS.kiemTraTrungIMEI(maIMEI);
+					if (existingIMEI) {
+						JOptionPane.showMessageDialog(null, "IMEI đã tồn tại. Vui lòng nhập IMEI khác.");
+					} else {
+						IMEIDTO IMEI = new IMEIDTO(maIMEI, idSP, 0);
+						imeiBUS.themIMEI(IMEI);
+						JOptionPane.showMessageDialog(null, "Thêm IMEI thành công.");
+					}
+				} catch (NumberFormatException ex) {
+					JOptionPane.showMessageDialog(null, "Vui lòng nhập IMEI hợp lệ.");
+				}
 			}
 		});
 		btn_them.setBounds(469, 400, 129, 23);

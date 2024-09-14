@@ -1,12 +1,12 @@
 package GUI.Dialog.PhieuNhap;
 
-import BUS.PhieuNhapBUS;
-import BUS.SanPhamBUS;
-import BUS.ctSanPhamBUS;
+import BUS.*;
 import DTO.ChiTietPhieuNhapDTO;
 import DTO.PhieuNhapDTO;
 import DTO.SanPhamDTO;
 import DTO.ctSanPhamDTO;
+import DTO.IMEIDTO;
+import GUI.Dialog.SanPhamDialog.themSanPham_Dialog;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -30,11 +30,11 @@ public class ThemPhieuNhap extends JPanel {
     public JTable table_chonSanPham;
     private final JTextField textField_idSanPham;
     private final JTextField textField_tenSanPham;
-    private final JTextField textField_soLuong;
     private final JTextField textField_giaNhap;
     public JTable table_sanPham;
     Label lb_TongTien;
     private DefaultTableModel defaultTableModel;
+    private JComboBox<String> comboBox_IMEI;
 
     /**
      * Create the panel.
@@ -98,7 +98,6 @@ public class ThemPhieuNhap extends JPanel {
                 nhapHang();
             }
         });
-
 
         JPanel panel_2 = new JPanel();
         panel_2.setBackground(new Color(255, 255, 255));
@@ -202,24 +201,32 @@ public class ThemPhieuNhap extends JPanel {
         panel_2.add(lblNewLabel_1_2);
 
         textField_giaNhap = new JTextField();
-        textField_giaNhap.setEditable(false);
+        textField_giaNhap.setEditable(true);
         textField_giaNhap.setFont(new Font("Tahoma", Font.BOLD, 13));
         textField_giaNhap.setBackground(new Color(233, 236, 237));
         textField_giaNhap.setColumns(10);
         textField_giaNhap.setBounds(551, 178, 137, 36);
         panel_2.add(textField_giaNhap);
 
-        JLabel lblNewLabel_1_2_1 = new JLabel("Số lượng");
+        JLabel lblNewLabel_1_2_1 = new JLabel("IMEI");
         lblNewLabel_1_2_1.setFont(new Font("Tahoma", Font.PLAIN, 16));
         lblNewLabel_1_2_1.setBounds(702, 147, 100, 27);
         panel_2.add(lblNewLabel_1_2_1);
 
-        textField_soLuong = new JTextField();
-        textField_soLuong.setFont(new Font("Tahoma", Font.BOLD, 13));
-        textField_soLuong.setColumns(10);
-        textField_soLuong.setBounds(702, 178, 137, 36);
-        panel_2.add(textField_soLuong);
+        comboBox_IMEI = new JComboBox<>();
+        comboBox_IMEI.setBounds(702, 178, 137, 36);
+        panel_2.add(comboBox_IMEI);
 
+        JButton btn_themIMEI = new JButton("Thêm IMEI");
+        btn_themIMEI.setFont(new Font("Tahoma", Font.PLAIN, 16));
+        btn_themIMEI.setBounds(702, 220, 137, 36);
+        panel_2.add(btn_themIMEI);
+        btn_themIMEI.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                int idSP = Integer.parseInt(textField_idSanPham.getText());
+                new themSanPham_Dialog(idSP).setVisible(true);
+            }
+        });
 
         JButton btn_themSanPham = new JButton("Thêm sản phẩm");
         btn_themSanPham.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -230,7 +237,6 @@ public class ThemPhieuNhap extends JPanel {
                 themTableSanPham();
             }
         });
-
 
         JButton btn_xoaSanPham = new JButton("Xóa sản phẩm");
         btn_xoaSanPham.setFont(new Font("Tahoma", Font.PLAIN, 16));
@@ -243,13 +249,12 @@ public class ThemPhieuNhap extends JPanel {
             }
         });
 
-
         table_sanPham = new JTable();
         table_sanPham.setModel(new DefaultTableModel(
                 new Object[][] {
                 },
                 new String[] {
-                        "Mã sản phẩm", "Tên sản phẩm", "Đơn giá","Màu sắc", "Ram", "Rom", "Số lượng"
+                        "Mã sản phẩm", "Tên sản phẩm", "Đơn giá","Màu sắc", "Ram", "Rom", "IMEI"
                 }
         ));
         JScrollPane scrollPane_1 = new JScrollPane(table_sanPham);
@@ -257,16 +262,34 @@ public class ThemPhieuNhap extends JPanel {
         panel_2.add(scrollPane_1);
 
         defaultTableModel = (DefaultTableModel) table_chonSanPham.getModel();
-
+        // Load all products of this phieuNhap to the table
+        loadAllSanPhamByidPhieuNhap(Integer.parseInt(textField_IdPhieuNhap.getText()));
         SanPhamBUS sanPhamBUS = new SanPhamBUS();
         ArrayList<SanPhamDTO> products = sanPhamBUS.layDanhSachTatCaChiTietSanPham();
         DefaultTableModel chonSPModel = (DefaultTableModel) table_chonSanPham.getModel();
         for (SanPhamDTO product : products) {
-            // xong
             ctSanPhamBUS ctSanPhamBUS = new ctSanPhamBUS();
             ctSanPhamDTO ctSanPham = ctSanPhamBUS.timctSanPhamTheoId(product.getIdSP());
             Object[] rowData = {product.getIdSP(), product.getTenSP(), product.getSoLuong(), product.getMauSac(), ctSanPham.getRam(), ctSanPham.getRom() };
             chonSPModel.addRow(rowData);
+        }
+    }
+
+    private void loadAllSanPhamByidPhieuNhap(int inPN) {
+        PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+        ArrayList<ChiTietPhieuNhapDTO> ctpnList = phieuNhapBUS.layDanhSachChiTietPhieuNhapTheoIdPhieuNhap(inPN);
+        DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
+        for (ChiTietPhieuNhapDTO ctpn : ctpnList) {
+            SanPhamBUS sanPhamBUS = new SanPhamBUS();
+            SanPhamDTO sanPham = sanPhamBUS.laySanPhamTheoId(ctpn.getIdSanPham());
+            ctSanPhamBUS ctSanPhamBUS = new ctSanPhamBUS();
+            ctSanPhamDTO ctSanPham = ctSanPhamBUS.timctSanPhamTheoId(sanPham.getIdSP());
+            ArrayList<IMEIDTO> imeiList = new IMEIBUS().layDanhSachIMEITheoPhieuNhap(inPN);
+            for (IMEIDTO imei : imeiList) {
+                String maIMEI = String.valueOf(imei.getMaIMEI());
+                Object[] rowData = {sanPham.getIdSP(), sanPham.getTenSP(), sanPham.getGiaNhap(), sanPham.getMauSac(), ctSanPham.getRam(), ctSanPham.getRom(), maIMEI};
+                model.addRow(rowData);
+            }
         }
     }
 
@@ -275,21 +298,25 @@ public class ThemPhieuNhap extends JPanel {
         if (selectedRow != -1) {
             String idSanPham = table_chonSanPham.getValueAt(selectedRow, 0).toString();
             String tenSanPham = table_chonSanPham.getValueAt(selectedRow, 1).toString();
-            int idSP = Integer.parseInt(idSanPham);
-            SanPhamBUS sanPhamBUS = new SanPhamBUS();
-            SanPhamDTO sanPham = sanPhamBUS.laySanPhamTheoId(idSP);
 
-            String giaNhap = String.format("%,.0f", sanPham.getGiaNhap());
+            String giaNhap = textField_giaNhap.getText();
             String mauSac = table_chonSanPham.getValueAt(selectedRow, 3).toString();
             String ram = table_chonSanPham.getValueAt(selectedRow, 4).toString();
             String rom = table_chonSanPham.getValueAt(selectedRow, 5).toString();
-            String soLuong = textField_soLuong.getText();
-            if (!soLuong.matches("\\d+") || Integer.parseInt(soLuong) <= 0) {
-                JOptionPane.showMessageDialog(null, "Số lượng không hợp lệ!");
+            String imei = (String) comboBox_IMEI.getSelectedItem();
+            if (imei == null || imei.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Vui lòng chọn IMEI!");
                 return;
             }
             DefaultTableModel sanPhamModel = (DefaultTableModel) table_sanPham.getModel();
-            Object[] rowData = {idSanPham, tenSanPham, giaNhap, mauSac, ram, rom, soLuong};
+            Object[] rowData = {idSanPham, tenSanPham, giaNhap, mauSac, ram, rom, imei};
+            //kiểm tra imei có trùng với các imei đang có ở trong bảng không?
+            for (int i = 0; i < sanPhamModel.getRowCount(); i++) {
+                if (imei.equals(sanPhamModel.getValueAt(i, 6))) {
+                    JOptionPane.showMessageDialog(null, "IMEI đã tồn tại trong bảng!");
+                    return;
+                }
+            }
             sanPhamModel.addRow(rowData);
         }
         double tongTien = 0.0;
@@ -297,7 +324,7 @@ public class ThemPhieuNhap extends JPanel {
         for (int i = 0; i < model.getRowCount(); i++) {
             try {
                 double donGia = Double.parseDouble(model.getValueAt(i, 2).toString().replace(",", "").replace(".", ""));
-                int soLuong = Integer.parseInt(model.getValueAt(i, 6).toString());
+                int soLuong = 1; // Each IMEI represents one unit
                 double tongTienHang = donGia * soLuong;
                 tongTien += tongTienHang;
             } catch (NumberFormatException e) {
@@ -307,6 +334,7 @@ public class ThemPhieuNhap extends JPanel {
 
         lb_TongTien.setText("Tổng tiền: " + String.format("%,.0f", tongTien));
     }
+
     private void chonSanPham(){
         int selectedRow = table_chonSanPham.getSelectedRow();
         if (selectedRow != -1) {
@@ -318,13 +346,21 @@ public class ThemPhieuNhap extends JPanel {
 
             int idSP = Integer.parseInt(idSanPham);
             SanPhamBUS sanPhamBUS = new SanPhamBUS();
-            // chưa
             SanPhamDTO sanPham = sanPhamBUS.laySanPhamTheoId(idSP);
 
             String giaNhap = String.format("%,.0f", sanPham.getGiaNhap());
             textField_giaNhap.setText(String.valueOf(giaNhap));
+
+            // Load IMEI codes for the selected product
+            IMEIBUS imeiBUS = new IMEIBUS();
+            ArrayList<IMEIDTO> imeiList = imeiBUS.layDanhSachIMEITheoSanPham(idSP);
+            comboBox_IMEI.removeAllItems();
+            for (IMEIDTO imei : imeiList) {
+                comboBox_IMEI.addItem(String.valueOf(imei.getMaIMEI()));
+            }
         }
     }
+
     private void xoaSanPhamTable(){
         int selectedRow = table_sanPham.getSelectedRow();
         if (selectedRow != -1) {
@@ -332,21 +368,32 @@ public class ThemPhieuNhap extends JPanel {
             if (choice == JOptionPane.YES_OPTION) {
                 DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
                 model.removeRow(selectedRow);
-
+                IMEIBUS imeiBUS = new IMEIBUS();
+                String imei = table_sanPham.getValueAt(selectedRow, 6).toString();
+                imeiBUS.xoaIMEI(imei);
                 double tongTien = 0.0;
                 for (int i = 0; i < model.getRowCount(); i++) {
                     double donGia = Double.parseDouble(model.getValueAt(i, 2).toString().replace(",", ""));
-                    int soLuongHang = Integer.parseInt(model.getValueAt(i, 6).toString());
+                    int soLuongHang = 1; // Each IMEI represents one unit
                     double tongTienHang = donGia * soLuongHang;
                     tongTien += tongTienHang;
                 }
                 lb_TongTien.setText("Tổng tiền: " + String.format("%,.0f", tongTien));
+                PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
+                int idPhieuNhap = Integer.parseInt(textField_IdPhieuNhap.getText());
+                phieuNhapBUS.updateTongTienBy(idPhieuNhap, tongTien);
+
             }
         } else {
             JOptionPane.showMessageDialog(null, "Vui lòng chọn một hàng để xóa.");
         }
     }
+
     private void nhapHang() {
+        if (table_sanPham.getRowCount() == 0) {
+            JOptionPane.showMessageDialog(null, "Vui lòng chọn ít nhất một sản phẩm để nhập.");
+            return;
+        }
         String idPhieuNhap = textField_IdPhieuNhap.getText();
         String idNhanVien = textField_NhanVien.getText();
         String tongTien = lb_TongTien.getText().replaceAll("\\D", "");
@@ -357,49 +404,22 @@ public class ThemPhieuNhap extends JPanel {
         pnDTO.setTongTien(Integer.parseInt(tongTien));
         pnDTO.setIdNhanVien(Integer.parseInt(idNhanVien));
         PhieuNhapBUS phieuNhapBUS = new PhieuNhapBUS();
-        //nếu idPhieuNhap này chưa có trong database thì thêm vào
-        if(phieuNhapBUS.kiemTraTonTaiIdPhieuNhap(Integer.parseInt(idPhieuNhap)) == false){
+
+        // If this idPhieuNhap does not exist in the database, add it
+//        if (!phieuNhapBUS.kiemTraTonTaiIdPhieuNhap(Integer.parseInt(idPhieuNhap))) {
             phieuNhapBUS.addPhieuNhap(pnDTO);
-        }
-
-        if (table_sanPham.getRowCount() == 0) {
-            JOptionPane.showMessageDialog(null, "Vui lòng chọn ít nhất một sản phẩm để nhập.");
-            return;
-        }
-
-        DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
-        for (int i = 0; i < model.getRowCount(); i++) {
-            String soLuong = model.getValueAt(i, 6).toString();
-            String donGia = model.getValueAt(i, 2).toString().replaceAll(",", "");
-            String idSanPham = model.getValueAt(i, 0).toString();
-
-            ChiTietPhieuNhapDTO ctPN = new ChiTietPhieuNhapDTO();
-            ctPN.setIdPhieuNhap(Integer.parseInt(idPhieuNhap));
-            ctPN.setIdSanPham(Integer.parseInt(idSanPham));
-            ctPN.setSoLuong(Integer.parseInt(soLuong));
-            try {
-                String donGiaStr = donGia.replace(",", "").replace(".", "");
-                float donGiaFloat = Float.parseFloat(donGiaStr);
-                ctPN.setDonGia(donGiaFloat);
-                ctPN.setThanhTien(donGiaFloat * Integer.parseInt(soLuong));
-            } catch (NumberFormatException e) {
-                JOptionPane.showMessageDialog(null, "Giá nhập không hợp lệ!");
+            ctPhieuNhapBUS ctpnBUS = new ctPhieuNhapBUS();
+            int soLuongSanPham = table_sanPham.getRowCount();
+            for (int i = 0; i < soLuongSanPham; i++) {
+                String idSanPham = table_sanPham.getValueAt(i, 0).toString();
+                int tongTienct = 0;
+                String giaNhap = table_sanPham.getValueAt(i, 2).toString().replace(",", "");
+                String imei = table_sanPham.getValueAt(i, 6).toString();
+                ctpnBUS.themChiTietPhieuNhap(soLuongSanPham, Integer.parseInt(giaNhap), tongTienct, Integer.parseInt(idPhieuNhap), Integer.parseInt(idSanPham));
+                IMEIBUS imeiBUS = new IMEIBUS();
+                boolean imeiDTO = imeiBUS.updateIdPhieuNhap(Integer.parseInt(imei), Integer.parseInt(idPhieuNhap));
             }
-            ArrayList<ChiTietPhieuNhapDTO> listCTPN = new ArrayList<>();
-            listCTPN.add(ctPN);
-            // xong
-            phieuNhapBUS.add(listCTPN);
-
-            SanPhamBUS sanPhamBUS = new SanPhamBUS();
-            // xong
-            sanPhamBUS.capNhapSoLuongKhiNhapHang(Integer.parseInt(idSanPham), Integer.parseInt(soLuong));
-        }
-        // xong
-        phieuNhapBUS.getupdateTongTien(Integer.parseInt(idPhieuNhap), Integer.parseInt(tongTien));
-        // xong
-        lb_TongTien.setText("Tổng tiền: 0");
-        phieuNhapBUS.getupdateTongTien(Integer.parseInt(idPhieuNhap),0);
-        model.setRowCount(0);
-        JOptionPane.showMessageDialog(null, "Nhập hàng thành công.");
+//        }
+        JOptionPane.showMessageDialog(null, "Nhập hàng thành công!");
     }
 }
