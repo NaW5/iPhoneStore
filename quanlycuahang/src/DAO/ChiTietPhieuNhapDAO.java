@@ -1,3 +1,4 @@
+// ChiTietPhieuNhapDAO.java
 package DAO;
 
 import DTO.ChiTietPhieuNhapDTO;
@@ -16,7 +17,6 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         return new ChiTietPhieuNhapDAO();
     }
 
-    // In ChiTietPhieuNhapDAO.java
     @Override
     public int insert(ArrayList<ChiTietPhieuNhapDTO> t) {
         int ketQua = 0;
@@ -28,18 +28,16 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
                 checkPst.setInt(1, chiTiet.getIdPhieuNhap());
                 ResultSet rs = checkPst.executeQuery();
                 if (rs.next() && rs.getInt(1) == 0) {
-                    // Insert into phieunhapkho if not exists
                     String insertPhieuNhapSql = "INSERT INTO phieunhapkho(idPhieuNhap) VALUES (?)";
                     PreparedStatement insertPhieuNhapPst = con.prepareStatement(insertPhieuNhapSql);
                     insertPhieuNhapPst.setInt(1, chiTiet.getIdPhieuNhap());
                     insertPhieuNhapPst.executeUpdate();
                 }
-                // Insert into ctphieunhapkho
-                String sql = "INSERT INTO ctphieunhapkho(PHIEUNHAP_idPhieuNhap, SANPHAM_idSP, soLuong, donGia, thanhTien) VALUES (?,?,?,?,?)";
+                String sql = "INSERT INTO ctphieunhapkho(PHIEUNHAP_idPhieuNhap, SANPHAM_idSP, IMEI, donGia, thanhTien) VALUES (?,?,?,?,?)";
                 PreparedStatement pst = con.prepareStatement(sql);
                 pst.setInt(1, chiTiet.getIdPhieuNhap());
                 pst.setInt(2, chiTiet.getIdSanPham());
-                pst.setInt(3, chiTiet.getSoLuong());
+                pst.setInt(3, chiTiet.getIMEI());
                 pst.setFloat(4, chiTiet.getDonGia());
                 pst.setDouble(5, chiTiet.getThanhTien());
                 ketQua += pst.executeUpdate();
@@ -86,12 +84,12 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
             pst.setString(1, t);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                int soLuong = rs.getInt("soLuong");
-                int donGia = rs.getInt("donGia");
-                int thanhTien = rs.getInt("thanhTien");
+                int IMEI = rs.getInt("IMEI");
+                float donGia = rs.getFloat("donGia");
+                double thanhTien = rs.getDouble("thanhTien");
                 int idPhieuNhap = rs.getInt("PHIEUNHAP_idPhieuNhap");
                 int idSanPham = rs.getInt("SANPHAM_idSP");
-                ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(idPhieuNhap, donGia, thanhTien, soLuong, idSanPham);
+                ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(idPhieuNhap, donGia, thanhTien, IMEI, idSanPham);
                 result.add(ctphieu);
             }
             JDBCUtil.closeConnection(con);
@@ -116,11 +114,11 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
             pst.setInt(1, idPhieuNhap);
             ResultSet rs = pst.executeQuery();
             while (rs.next()) {
-                int soLuong = rs.getInt("soLuong");
+                int IMEI = rs.getInt("IMEI");
                 float donGia = rs.getFloat("donGia");
                 double thanhTien = rs.getDouble("thanhTien");
                 int idSanPham = rs.getInt("SANPHAM_idSP");
-                ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(idPhieuNhap, donGia, thanhTien, soLuong, idSanPham);
+                ChiTietPhieuNhapDTO ctphieu = new ChiTietPhieuNhapDTO(idPhieuNhap, donGia, thanhTien, IMEI, idSanPham);
                 result.add(ctphieu);
             }
             JDBCUtil.closeConnection(con);
@@ -130,14 +128,13 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         return result;
     }
 
-
-    public int themChiTietPhieuNhap(int soLuong, int donGia, int thanhTien, int phieunhapIdPhieuNhap, int sanphamIdSP) {
+    public int themChiTietPhieuNhap(int IMEI, float donGia, double thanhTien, int phieunhapIdPhieuNhap, int sanphamIdSP) {
         int ketQua = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "INSERT INTO ctphieunhapkho(soLuong, donGia, thanhTien,PHIEUNHAP_idPhieuNhap, SANPHAM_idSP) VALUES (?,?,?,?,?)";
+            String sql = "INSERT INTO ctphieunhapkho(IMEI, donGia, thanhTien, PHIEUNHAP_idPhieuNhap, SANPHAM_idSP) VALUES (?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
-            pst.setInt(1, soLuong);
+            pst.setInt(1, IMEI);
             pst.setFloat(2, donGia);
             pst.setDouble(3, thanhTien);
             pst.setInt(4, phieunhapIdPhieuNhap);
@@ -148,5 +145,66 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
             Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
         }
         return ketQua;
+    }
+
+    public void xoaChiTietPhieuNhapByIMEI(int i) {
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "DELETE FROM ctphieunhapkho WHERE IMEI = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, i);
+            pst.executeUpdate();
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException ex) {
+            Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public boolean kiemTraTonTaiIMEI(int i) {
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT COUNT(*) FROM ctphieunhapkho WHERE IMEI = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, i);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next() && rs.getInt(1) > 0) {
+                return true;
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException ex) {
+            Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return false;
+    }
+
+    public void xoaChiTietPhieuNhapByidPhieuNhap(int i) {
+        try {
+            Connection con = JDBCUtil.getConnection();
+
+            // Step 1: Retrieve all IMEI records associated with the given idPhieuNhap
+            String selectIMEISql = "SELECT maIMEI FROM imei WHERE idPhieuNhap = ?";
+            PreparedStatement selectIMEIPst = con.prepareStatement(selectIMEISql);
+            selectIMEIPst.setInt(1, i);
+            ResultSet rs = selectIMEIPst.executeQuery();
+
+            // Step 2: Delete these IMEI records
+            String deleteIMEISql = "DELETE FROM imei WHERE maIMEI = ?";
+            PreparedStatement deleteIMEIPst = con.prepareStatement(deleteIMEISql);
+            while (rs.next()) {
+                int imei = rs.getInt("maIMEI");
+                deleteIMEIPst.setInt(1, imei);
+                deleteIMEIPst.executeUpdate();
+            }
+
+            // Step 3: Delete all ChiTietPhieuNhap records associated with the given idPhieuNhap
+            String deleteChiTietSql = "DELETE FROM ctphieunhapkho WHERE PHIEUNHAP_idPhieuNhap = ?";
+            PreparedStatement deleteChiTietPst = con.prepareStatement(deleteChiTietSql);
+            deleteChiTietPst.setInt(1, i);
+            deleteChiTietPst.executeUpdate();
+
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException ex) {
+            Logger.getLogger(ChiTietPhieuNhapDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 }

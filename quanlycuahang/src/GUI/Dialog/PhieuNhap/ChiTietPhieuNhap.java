@@ -91,7 +91,7 @@ public class ChiTietPhieuNhap extends JDialog {
                 new Object[][] {
                 },
                 new String[] {
-                        "Mã sản phẩm", "Tên sản phẩm","Thời gian tạo","Ram","Rom", "Màu sắc","Đơn giá", "Số lượng"
+                        "Mã sản phẩm", "Tên sản phẩm","Thời gian tạo","Ram","Rom", "Màu sắc","Đơn giá", "IMEI"
                 }
         ));
 
@@ -122,11 +122,11 @@ public class ChiTietPhieuNhap extends JDialog {
         textField_tongTien.setText(String.format("%,.0f", phieuNhapDTO.getTongTien()));
 
         // xong
-        ArrayList<ChiTietPhieuNhapDTO> chiTietPhieuNhapList = phieuNhapBUS.getCTPhieuNhapById(idPN);
+        ArrayList<ChiTietPhieuNhapDTO> chiTietPhieuNhapList = phieuNhapBUS.layDanhSachChiTietPhieuNhapTheoIdPhieuNhap(idPN);
 
         DefaultTableModel model = (DefaultTableModel) table_chitietPhieuNhap.getModel();
         for (ChiTietPhieuNhapDTO chiTietPhieuNhap : chiTietPhieuNhapList) {
-            String donGia = String.format("%.0f", chiTietPhieuNhap.getDonGia());
+            String donGia = String.format("%,.0f", chiTietPhieuNhap.getDonGia());
 
             SanPhamBUS sanPhamBUS = new SanPhamBUS();
             // chưa
@@ -148,7 +148,7 @@ public class ChiTietPhieuNhap extends JDialog {
                     chitietSanPham.getRom(),
                     sanPham.getMauSac(),
                     donGia,
-                    chiTietPhieuNhap.getSoLuong()
+                    chiTietPhieuNhap.getIMEI()
             });
         }
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();

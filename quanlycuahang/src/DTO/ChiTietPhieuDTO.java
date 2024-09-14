@@ -3,20 +3,20 @@ package DTO;
 import java.util.Objects;
 
 public class ChiTietPhieuDTO {
-    private int soLuong;
+    private int IMEI;
     private int idSanPham;
     public ChiTietPhieuDTO(){}
-    public ChiTietPhieuDTO(int soLuong, int idSanPham){
-        this.soLuong = soLuong;
+    public ChiTietPhieuDTO(int IMEI, int idSanPham){
+        this.IMEI = IMEI;
         this.idSanPham = idSanPham;
     }
 
-    public void setSoLuong(int soLuong) {
-        this.soLuong = soLuong;
+    public void setIMEI(int IMEI) {
+        this.IMEI = IMEI;
     }
 
-    public int getSoLuong() {
-        return soLuong;
+    public int getIMEI() {
+        return IMEI;
     }
 
     public void setIdSanPham(int idSanPham) {
@@ -30,7 +30,7 @@ public class ChiTietPhieuDTO {
     @Override
     public String toString() {
         return "ChiTietPhieu{" +
-                "soLuong=" + soLuong +
+                "IMEI=" + IMEI +
                 ", idSanPham=" + idSanPham +
                 '}';
     }
@@ -39,11 +39,11 @@ public class ChiTietPhieuDTO {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof ChiTietPhieuDTO that)) return false;
-        return soLuong == that.soLuong && idSanPham == that.idSanPham;
+        return IMEI == that.IMEI && idSanPham == that.idSanPham;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(soLuong, idSanPham);
+        return Objects.hash(IMEI, idSanPham);
     }
 }

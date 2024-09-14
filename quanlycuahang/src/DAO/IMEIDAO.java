@@ -263,4 +263,28 @@ public class IMEIDAO implements DAOInterface<IMEIDTO> {
         }
         return ketQua;
     }
+
+    public ArrayList<IMEIDTO> selectAllIMEIBySanPhamChuaNhap(int idSP, int i) {
+        ArrayList<IMEIDTO> IMEIList = new ArrayList<>();
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "SELECT * FROM IMEI WHERE SANPHAM_idSP = ? AND idPhieuNhap IS NULL";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idSP);
+            ResultSet rs = pst.executeQuery();
+
+            while (rs.next()) {
+                IMEIDTO imei = new IMEIDTO();
+                imei.setMaIMEI(rs.getInt("maIMEI"));
+                imei.setSANPHAM_idSP(rs.getInt("SANPHAM_idSP"));
+                imei.setIdPhieuNhap(rs.getInt("idPhieuNhap"));
+                imei.setTrangThai(rs.getInt("trangThai"));
+                IMEIList.add(imei);
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return IMEIList;
+    }
 }

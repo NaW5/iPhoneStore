@@ -159,7 +159,7 @@ public class PhieuNhapGUI extends JPanel {
 			int selectedIdPhieuNhap = (int) model.getValueAt(selectedRow, 0);
 			int selectedIdNhanVien = (int) model.getValueAt(selectedRow, 1);
 
-			JFrame frame = new JFrame("Thêm Phiếu Nhập");
+			JFrame frame = new JFrame("Bổ sung Phiếu Nhập " + selectedIdPhieuNhap);
 			frame.setSize(1170, 700);
 			ThemPhieuNhap themPhieuNhapPanel = new ThemPhieuNhap(selectedIdPhieuNhap, selectedIdNhanVien);
 			frame.getContentPane().add(themPhieuNhapPanel);

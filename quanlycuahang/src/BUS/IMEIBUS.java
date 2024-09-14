@@ -61,4 +61,8 @@ public class IMEIBUS {
     public ArrayList<IMEIDTO> layDanhSachIMEITheoPhieuNhap(int inPN) {
         return imeiDAO.selectAllIMEIByPhieuNhap(inPN);
     }
+
+    public ArrayList<IMEIDTO> layDanhSachIMEITheoSanPhamChuaNhap(int idSP, int i) {
+        return imeiDAO.selectAllIMEIBySanPhamChuaNhap(idSP, i);
+    }
 }

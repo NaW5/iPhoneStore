@@ -7,8 +7,8 @@ public class ChiTietPhieuNhapDTO extends ChiTietPhieuDTO{
     private float donGia;
     private double thanhTien;
     public ChiTietPhieuNhapDTO(){}
-    public ChiTietPhieuNhapDTO(int idPhieuNhap, float donGia, double thanhTien, int soLuong, int idSanPham){
-        super(soLuong, idSanPham);
+    public ChiTietPhieuNhapDTO(int idPhieuNhap, float donGia, double thanhTien, int IMEI, int idSanPham){
+        super(IMEI, idSanPham);
         this.idPhieuNhap = idPhieuNhap;
         this.donGia = donGia;
         this.thanhTien = thanhTien;

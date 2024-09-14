@@ -69,14 +69,14 @@ public class PhieuNhapBUS {
     public long getTongTien(ArrayList<ChiTietPhieuNhapDTO> ctphieunhap) {
         long ketQua = 0;
         for (ChiTietPhieuNhapDTO item : ctphieunhap) {
-            ketQua += item.getDonGia() * item.getSoLuong();
+            ketQua += (long) item.getDonGia();
         }
         return ketQua;
     }
     public int getQuantity(ArrayList<ChiTietPhieuNhapDTO> ctphieunhap) {
         int quantity = 0;
         for (ChiTietPhieuNhapDTO item : ctphieunhap) {
-            quantity += item.getSoLuong();
+            quantity += item.getIMEI();
         }
         return quantity;
     }
@@ -88,9 +88,7 @@ public class PhieuNhapBUS {
     public PhieuNhapDTO getPhieuNhapById(int idPhieuNhap) {
         return phieunhapDAO.selectById(idPhieuNhap);
     }
-    public ArrayList<ChiTietPhieuNhapDTO> getCTPhieuNhapById(int idPhieuNhap){
-        return ctPhieuNhapDAO.selectById_ctp(idPhieuNhap);
-    }
+
 
     public int add(ArrayList<ChiTietPhieuNhapDTO> ctpn) {
         return ctPhieuNhapDAO.insert(ctpn);
@@ -107,25 +105,10 @@ public class PhieuNhapBUS {
         return result;
     }
     public boolean addPhieuNhap(PhieuNhapDTO pn) {
-        try {
-            // Thực hiện thêm vào cơ sở dữ liệu
-            int idInserted = phieunhapDAO.insert(pn);
-
-            // Kiểm tra xem ID đã được thêm có hợp lệ không
-            if (idInserted != 0) {
-                // Thêm vào danh sách
-                pn.setIdPhieuNhap(idInserted); // Cập nhật ID cho đối tượng DTO
-                listPhieuNhap.add(pn);
-                return true;
-            } else {
-                JOptionPane.showMessageDialog(null, "Lỗi khi thêm vào cơ sở dữ liệu!");
-                return false;
-            }
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            JOptionPane.showMessageDialog(null, "Đã xảy ra lỗi: " + ex.getMessage());
-            return false;
+        if (phieunhapDAO.insert(pn) > 0) {
+            return true;
         }
+        return false;
     }
     public int deletePhieuNhap(int idPhieuNhap){
         return phieunhapDAO.delete(idPhieuNhap);
