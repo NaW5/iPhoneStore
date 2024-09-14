@@ -13,7 +13,7 @@ public class TrangChuGUI extends JPanel {
 	public TrangChuGUI() {
 		setLayout(new BorderLayout());
 		JLabel jL = new JLabel("");
-		jL.setIcon(new ImageIcon("D:\\University\\Second year\\2nd Semester\\Java\\DoAn_Java\\img\\login.jpg"));
+		jL.setIcon(new ImageIcon("img/trangchu.jpg"));
 		add(jL, BorderLayout.CENTER);
 
 	}
