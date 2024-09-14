@@ -18,12 +18,12 @@ public class xemDanhSachImeiSanPham_Dialog extends JDialog {
 		ArrayList<IMEIDTO> result = IMEIDAO.getInstance().selectByCondition("SANPHAM_idSP = " + idSP);
 		tblModel.setRowCount(0);
 		for (IMEIDTO sp : result) {
-			tblModel.addRow(new Object[]{sp.getMaIMEI(), sp.getSANPHAM_idSP(), sp.getIdPhieuNhap()});
+			tblModel.addRow(new Object[]{sp.getMaIMEI(), sp.getSANPHAM_idSP(), sp.getIdPhieuNhap(), sp.getTrangThai()});
 		}
 	}
 
 	public xemDanhSachImeiSanPham_Dialog(int idSP) {
-		String[] columnNames = {"Mã IMEI", "Mã sản phẩm", "Mã phiếu nhập"};
+		String[] columnNames = {"Mã IMEI", "Mã sản phẩm", "Mã phiếu nhập", "Trạng thái"};
 		tblModel = new DefaultTableModel(columnNames, 0);
 		loadDataTalbe(idSP);
 		getContentPane().setLayout(null);

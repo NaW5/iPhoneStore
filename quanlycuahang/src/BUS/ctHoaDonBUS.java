@@ -35,5 +35,4 @@ public class ctHoaDonBUS {
     public ctHoaDonDTO getCTHoaDonById(int id) {
         return ctHoaDonDAO.selectById(id);
     }
-
 }

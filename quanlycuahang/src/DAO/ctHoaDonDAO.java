@@ -19,11 +19,11 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
         int ketQua = 0;
         try {
             Connection con = JDBCUtil.getConnection();
-            String sql = "INSERT INTO ctHoaDon (soLuong, donGia, thanhTien, KHUYENMAI_idKM, PHIEUBAOHANH_idBaoHanh, SANPHAM_idSP, HOADON_idHoaDon) VALUES (?,?,?,?,?,?,?)";
+            String sql = "INSERT INTO ctHoaDon (soLuong, donGia, IMEI, KHUYENMAI_idKM, PHIEUBAOHANH_idBaoHanh, SANPHAM_idSP, HOADON_idHoaDon) VALUES (?,?,?,?,?,?,?)";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, t.getSoLuong());
             pst.setFloat(2, t.getDonGia());
-            pst.setDouble(3, t.getThanhTien());
+            pst.setInt(3, t.getIMEI());
             pst.setInt(4, t.getKHUYENMAI_idKM());
             pst.setInt(5, t.getPHIEUBAOHANH_idBaoHanh());
             pst.setInt(6, t.getSANPHAM_idSP());
@@ -37,7 +37,6 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
         }
         return ketQua;
     }
-
 
     @Override
     public int update(ctHoaDonDTO t) {
@@ -47,7 +46,7 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
             String sql = "UPDATE ctHoaDon " +
                     "SET soLuong = ?, " +
                     "donGia = ?, " +
-                    "thanhTien = ?, " +
+                    "IMEI = ?, " +
                     "KHUYENMAI_idKM = ?, " +
                     "PHIEUBAOHANH_idBaoHanh = ?, " +
                     "SANPHAM_idSP = ? " +
@@ -55,7 +54,7 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, t.getSoLuong());
             pst.setFloat(2, t.getDonGia());
-            pst.setDouble(3, t.getThanhTien());
+            pst.setInt(3, t.getIMEI());
             pst.setInt(4, t.getKHUYENMAI_idKM());
             pst.setInt(5, t.getPHIEUBAOHANH_idBaoHanh());
             pst.setInt(6, t.getSANPHAM_idSP());
@@ -69,7 +68,6 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
         }
         return ketQua;
     }
-
 
     @Override
     public int delete(String id) {
@@ -89,7 +87,6 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
         return ketQua;
     }
 
-
     @Override
     public ArrayList<ctHoaDonDTO> selectAll() {
         ArrayList<ctHoaDonDTO> ctHoaDonList = new ArrayList<>();
@@ -103,13 +100,12 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
                 ctHoaDonDTO ctHoaDon = new ctHoaDonDTO(
                         rs.getInt("soLuong"),
                         rs.getFloat("donGia"),
-                        rs.getDouble("thanhTien"),
+                        rs.getInt("IMEI"),
                         rs.getInt("KHUYENMAI_idKM"),
                         rs.getInt("PHIEUBAOHANH_idBaoHanh"),
                         rs.getInt("SANPHAM_idSP"),
                         rs.getInt("HOADON_idHoaDon")
                 );
-//                ctHoaDon.setId(rs.getInt("id"));
                 ctHoaDonList.add(ctHoaDon);
             }
             JDBCUtil.closeConnection(con);
@@ -118,7 +114,6 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
         }
         return ctHoaDonList;
     }
-
 
     @Override
     public ArrayList<ctHoaDonDTO> selectByCondition(String condition) {
@@ -133,13 +128,12 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
                 ctHoaDonDTO ctHoaDon = new ctHoaDonDTO(
                         rs.getInt("soLuong"),
                         rs.getFloat("donGia"),
-                        rs.getDouble("thanhTien"),
+                        rs.getInt("IMEI"),
                         rs.getInt("KHUYENMAI_idKM"),
                         rs.getInt("PHIEUBAOHANH_idBaoHanh"),
                         rs.getInt("SANPHAM_idSP"),
                         rs.getInt("HOADON_idHoaDon")
                 );
-//                ctHoaDon.setId(rs.getInt("id"));
                 ctHoaDonList.add(ctHoaDon);
             }
             JDBCUtil.closeConnection(con);
@@ -148,7 +142,6 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
         }
         return ctHoaDonList;
     }
-
 
     @Override
     public ctHoaDonDTO selectById(int id) {
@@ -164,7 +157,7 @@ public class ctHoaDonDAO implements DAOInterface<ctHoaDonDTO> {
                 ctHoaDon = new ctHoaDonDTO();
                 ctHoaDon.setSoLuong(rs.getInt("soLuong"));
                 ctHoaDon.setDonGia(rs.getFloat("donGia"));
-                ctHoaDon.setThanhTien(rs.getDouble("thanhTien"));
+                ctHoaDon.setIMEI(rs.getInt("IMEI"));
                 ctHoaDon.setKHUYENMAI_idKM(rs.getInt("KHUYENMAI_idKM"));
                 ctHoaDon.setPHIEUBAOHANH_idBaoHanh(rs.getInt("PHIEUBAOHANH_idBaoHanh"));
                 ctHoaDon.setSANPHAM_idSP(rs.getInt("SANPHAM_idSP"));

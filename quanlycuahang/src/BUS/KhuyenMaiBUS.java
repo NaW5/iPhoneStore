@@ -44,4 +44,8 @@ public class KhuyenMaiBUS {
         KhuyenMaiBUS khuyenMaiBUS = new KhuyenMaiBUS();
         System.out.println(khuyenMaiBUS.getAllKhuyenMai());
     }
+
+    public KhuyenMaiDTO getIDKhuyenMaiByPhanTram(int phanTramkhuyenMai) {
+        return khuyenMaiDAO.getIDKhuyenMaiByPhanTram(phanTramkhuyenMai);
+    }
 }

@@ -11,14 +11,18 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
-public class suaHoaDon_Dialog extends JDialog{
+import static java.sql.Types.NULL;
+
+public class suaHoaDon_Dialog extends JDialog {
 	private JTextField txt_timkiem;
-	private JTable table_SP;
+	private JTable table;
+	private JTextField txt_MaIMEI;
 	DefaultTableModel tblModel;
 	private JTextField txt_maSP;
 	private JTextField txt_tenSP;
@@ -52,7 +56,13 @@ public class suaHoaDon_Dialog extends JDialog{
 		ArrayList<SanPhamDTO> result = spBUS.layDanhSachSanPham();
 		tblModel.setRowCount(0);
 		for (SanPhamDTO sp : result) {
-			tblModel.addRow(new Object[]{sp.getIdSP(), sp.getTenSP()});
+			IMEIBUS imeiBUS = new IMEIBUS();
+			ArrayList<IMEIDTO> dsIMEI = imeiBUS.layDanhSachIMEITheoSanPham(sp.getIdSP());
+			for (IMEIDTO imei : dsIMEI) {
+				if (imei.getIdPhieuNhap() != NULL && imei.getTrangThai() == 0) {
+					tblModel.addRow(new Object[]{sp.getIdSP(), sp.getTenSP(), imei.getMaIMEI()});
+				}
+			}
 		}
 	}
 
@@ -60,14 +70,11 @@ public class suaHoaDon_Dialog extends JDialog{
 		txt_idKH.setText(String.valueOf(selectedCustomerId));
 	}
 
-
 	public suaHoaDon_Dialog(int idHD) {
-		String[] columnNames = {"Mã sản phẩm", "Tên sản phẩm"};
+		String[] columnNames = {"Mã sản phẩm", "Tên sản phẩm", "Mã IMEI"};
 		tblModel = new DefaultTableModel(columnNames, 0);
 		getContentPane().setLayout(null);
 		loadDataTalbe();
-
-
 
 		txt_timkiem = new JTextField();
 		txt_timkiem.addActionListener(new ActionListener() {
@@ -94,10 +101,15 @@ public class suaHoaDon_Dialog extends JDialog{
 		btn_reloadSP.setIcon(new ImageIcon(suaHoaDon_Dialog.class.getResource("/GUI/JPanel_QuanLyCuaHangDienThoai/Button-Reload-icon.png")));
 		btn_reloadSP.setBounds(323, 73, 28, 27);
 		getContentPane().add(btn_reloadSP);
-		System.out.println(idHD);
-		table_SP = new JTable(tblModel);
+
+		table = new JTable(tblModel);
+		table.setRowSelectionInterval(0, 0);
+		JScrollPane scrollPane = new JScrollPane(table);
+		scrollPane.setBounds(48, 136, 372, 250);
+		getContentPane().add(scrollPane);
+
 		ctHoaDonDTO newcthd = ctHoaDonDAO.getInstance().selectById(idHD);
-		System.out.println(newcthd);//ok
+		System.out.println(newcthd);
 		int newIDSP = newcthd.getSANPHAM_idSP();
 		int vitri = -1;
 		int rowCount = tblModel.getRowCount();
@@ -109,18 +121,10 @@ public class suaHoaDon_Dialog extends JDialog{
 			}
 		}
 
-		table_SP.setRowSelectionInterval(vitri, vitri);
-		JScrollPane scrollPane = new JScrollPane(table_SP);
-		scrollPane.setBounds(48, 136, 372, 347);
-		getContentPane().add(scrollPane);
-
-
-
-		int selectedRow = table_SP.getSelectedRow();
-		DefaultTableModel model = (DefaultTableModel) table_SP.getModel();
+		int selectedRow = table.getSelectedRow();
+		DefaultTableModel model = (DefaultTableModel) table.getModel();
 		int idSP = (int) model.getValueAt(selectedRow, 0);
-
-
+		int maIMEI = (int) model.getValueAt(selectedRow, 2);
 
 		JLabel lbl_maSP = new JLabel("Mã sản phẩm");
 		lbl_maSP.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -173,7 +177,6 @@ public class suaHoaDon_Dialog extends JDialog{
 		txt_mauSac.setBounds(666, 190, 158, 27);
 		getContentPane().add(txt_mauSac);
 
-
 		JLabel lbl_maHD = new JLabel("Mã hóa đơn");
 		lbl_maHD.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lbl_maHD.setBounds(907, 77, 94, 14);
@@ -185,19 +188,16 @@ public class suaHoaDon_Dialog extends JDialog{
 		txt_maHD.setBounds(907, 103, 94, 27);
 		getContentPane().add(txt_maHD);
 
-
-
 		JLabel lbl_NV = new JLabel("Nhân viên");
 		lbl_NV.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lbl_NV.setBounds(907, 165, 94, 14);
 		getContentPane().add(lbl_NV);
 
-		//tên của người đang đăng nhập
-
 		txt_tenNV = new JTextField(String.valueOf(HoaDonDAO.getInstance().selectById(idHD).getNHANVIEN_idNV()));
 		txt_tenNV.setColumns(10);
 		txt_tenNV.setBounds(907, 188, 132, 27);
 		getContentPane().add(txt_tenNV);
+		txt_tenNV.setEnabled(false);
 
 		JLabel lbl_KH = new JLabel("Khách hàng");
 		lbl_KH.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -211,22 +211,26 @@ public class suaHoaDon_Dialog extends JDialog{
 
 		JLabel lbl_tongtien = new JLabel("Tổng tiền");
 		lbl_tongtien.setFont(new Font("Tahoma", Font.BOLD, 16));
-		lbl_tongtien.setBounds(905, 348, 107, 27);
+		lbl_tongtien.setBounds(905, 400, 107, 27);
 		getContentPane().add(lbl_tongtien);
-
 
 		txt_tongtien = new JTextField("0");
 		txt_tongtien.setEditable(false);
 		txt_tongtien.setEnabled(false);
-		txt_tongtien.setBounds(907, 386, 158, 27);
+		txt_tongtien.setBounds(907, 430, 158, 27);
 		getContentPane().add(txt_tongtien);
 		txt_tongtien.setColumns(10);
+		txt_soluong = new JTextField("1");
 
-		txt_soluong = new JTextField(String.valueOf(newcthd.getSoLuong()));
-
-
-
-
+		JLabel lbl_MaIMEI = new JLabel("Mã IMEI");
+		lbl_MaIMEI.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lbl_MaIMEI.setBounds(498, 252, 94, 14);
+		getContentPane().add(lbl_MaIMEI);
+		txt_MaIMEI = new JTextField();
+		txt_MaIMEI.setEditable(false);
+		txt_MaIMEI.setColumns(10);
+		txt_MaIMEI.setBounds(498, 280, 94, 27);
+		getContentPane().add(txt_MaIMEI);
 
 		JButton btn_thoat = new JButton("Thoát");
 		btn_thoat.addActionListener(new ActionListener() {
@@ -269,18 +273,15 @@ public class suaHoaDon_Dialog extends JDialog{
 
 		JLabel lbl_soluong = new JLabel("Số lượng");
 		lbl_soluong.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lbl_soluong.setBounds(498, 252, 94, 14);
+		lbl_soluong.setBounds(666, 252, 94, 14);
 		getContentPane().add(lbl_soluong);
 
-
 		txt_soluong.setColumns(10);
-		txt_soluong.setBounds(498, 280, 94, 27);
+		txt_soluong.setBounds(666, 280, 94, 27);
 		getContentPane().add(txt_soluong);
-		table_SP.getColumnModel().getColumn(0).setPreferredWidth(95);
-
+		table.getColumnModel().getColumn(0).setPreferredWidth(95);
 
 		JButton btn_tao = new JButton("Sửa");
-
 		btn_tao.setFont(new Font("Tahoma", Font.PLAIN, 18));
 		btn_tao.setIcon(new ImageIcon(suaHoaDon_Dialog.class.getResource("/GUI/JPanel_QuanLyCuaHangDienThoai/icon_sua.png")));
 		btn_tao.setBounds(491, 426, 150, 57);
@@ -290,8 +291,6 @@ public class suaHoaDon_Dialog extends JDialog{
 		lbl_baohanh.setFont(new Font("Tahoma", Font.PLAIN, 14));
 		lbl_baohanh.setBounds(666, 327, 94, 14);
 		getContentPane().add(lbl_baohanh);
-
-
 
 		JComboBox cbb_baohanh = new JComboBox();
 		DefaultComboBoxModel<String> cbbmodel = new DefaultComboBoxModel<>();
@@ -311,23 +310,18 @@ public class suaHoaDon_Dialog extends JDialog{
 
 		JLabel lbl_khuyenmai = new JLabel("Khuyến mãi (%)");
 		lbl_khuyenmai.setFont(new Font("Tahoma", Font.PLAIN, 14));
-		lbl_khuyenmai.setBounds(666, 252, 119, 14);
+		lbl_khuyenmai.setBounds(907, 327, 119, 14);
 		getContentPane().add(lbl_khuyenmai);
 
 		JComboBox cbb_khuyenmai = new JComboBox();
-
 		DefaultComboBoxModel<Integer> cbbmodelkm = new DefaultComboBoxModel<>();
-		KhuyenMaiDAO kmDAO = KhuyenMaiDAO.getInstance();
-		ArrayList<KhuyenMaiDTO> dskm = kmDAO.selectAll();
+		ArrayList<KhuyenMaiDTO> dskm = kmBUS.getAllKhuyenMai();
 		for (KhuyenMaiDTO km : dskm) {
 			cbbmodelkm.addElement((int) km.getPhanTram());
 		}
 		cbb_khuyenmai.setModel(cbbmodelkm);
-		cbb_khuyenmai.setBounds(666, 282, 158, 22);
+		cbb_khuyenmai.setBounds(907, 352, 158, 22);
 		getContentPane().add(cbb_khuyenmai);
-		int maKM = newcthd.getKHUYENMAI_idKM();
-		int kmDangChon = (int) KhuyenMaiDAO.getInstance().selectByIdKM(maKM).getPhanTram();
-		cbb_khuyenmai.setSelectedItem(kmDangChon);
 
 		JLabel lbl_donGia = new JLabel("Đơn giá");
 		lbl_donGia.setFont(new Font("Tahoma", Font.PLAIN, 14));
@@ -340,16 +334,15 @@ public class suaHoaDon_Dialog extends JDialog{
 		txt_donGia.setBounds(498, 353, 96, 20);
 		getContentPane().add(txt_donGia);
 
-		table_SP.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
+		table.getSelectionModel().addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
-				int selectedRow = table_SP.getSelectedRow(); // Lấy chỉ số hàng đã chọn
-				if (selectedRow != -1) { // Kiểm tra xem có hàng nào được chọn không
-					DefaultTableModel model = (DefaultTableModel) table_SP.getModel();
+				int selectedRow = table.getSelectedRow();
+				if (selectedRow != -1) {
+					DefaultTableModel model = (DefaultTableModel) table.getModel();
 					int idSP = (int) model.getValueAt(selectedRow, 0);
-					txt_soluong.setText("0");// Lấy idSP của hàng đã chọn
-					// Tại đây, bạn có thể sử dụng idSP để cập nhật thông tin sản phẩm khác
-					// Ví dụ:
+					int maIMEI = (int) model.getValueAt(selectedRow, 2);
+					txt_soluong.setText("1");
 					DecimalFormat df = new DecimalFormat("#.##");
 					SanPhamDTO sp = SanPhamDAO.getInstance().selectById(idSP);
 					ctSanPhamDTO ctsp = ctSanPhamDAO.getInstance().selectById(idSP);
@@ -358,9 +351,10 @@ public class suaHoaDon_Dialog extends JDialog{
 					txt_rom.setText(ctsp.getRom());
 					txt_mauSac.setText(sp.getMauSac());
 					txt_donGia.setText(String.valueOf(df.format(sp.getGiaBan())));
+					txt_MaIMEI.setText(String.valueOf(maIMEI));
 					int soluong = Integer.parseInt(txt_soluong.getText());
 					int soluongton = sp.getSoLuong();
-					txt_soluong.setText(String.valueOf(soluongton));
+					txt_soluong.setText("1");
 					if (soluong > soluongton) {
 						JOptionPane.showMessageDialog(null, "Vui lòng nhập số lượng hợp lệ", "Lỗi", JOptionPane.ERROR_MESSAGE);
 						txt_soluong.setText("0"); // Clear the invalid input
@@ -368,7 +362,7 @@ public class suaHoaDon_Dialog extends JDialog{
 					}
 					Object selectedItem = cbb_khuyenmai.getSelectedItem();
 					int km = Integer.parseInt(selectedItem.toString());
-					float gia = sp.getGiaBan();
+					float gia = Integer.parseInt(txt_donGia.getText());
 					int sl = Integer.parseInt(txt_soluong.getText());
 					double tongTien = gia * sl - gia * sl * km / 100;
 					txt_tongtien.setText(df.format(tongTien));
@@ -386,20 +380,23 @@ public class suaHoaDon_Dialog extends JDialog{
 					txt_soluong.setText("0"); // Clear the invalid input
 					txt_soluong.requestFocusInWindow();
 				}
+				DecimalFormat df = new DecimalFormat("#.##");
 				Object selectedItem = cbb_khuyenmai.getSelectedItem();
 				int km = Integer.parseInt(selectedItem.toString());
-				float gia = sp.getGiaBan();
+				float gia = Integer.parseInt(txt_donGia.getText());
 				int sl = Integer.parseInt(txt_soluong.getText());
 				double tongTien = gia * sl - gia * sl * km / 100;
-				DecimalFormat df = new DecimalFormat("#.##");
 				txt_tongtien.setText(df.format(tongTien));
 			}
 		});
+
 		btn_tao.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if(!isNumeric(txt_soluong.getText())) {
+				if (!isNumeric(txt_soluong.getText())) {
 					JOptionPane.showMessageDialog(null, "Số lượng phải là số");
+					return;
 				}
+
 				int idHD = Integer.parseInt(txt_maHD.getText());
 				String thoiGian = LocalDate.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));
 				double tongTien = Double.parseDouble(txt_tongtien.getText());
@@ -410,7 +407,7 @@ public class suaHoaDon_Dialog extends JDialog{
 
 				int sl = Integer.parseInt(txt_soluong.getText());
 				float donGia = sp.getGiaBan();
-				double thanhTien = donGia*sl;
+				int IMEI = Integer.parseInt(txt_MaIMEI.getText());
 				Object selectedItem = cbb_khuyenmai.getSelectedItem();
 				int km = Integer.parseInt(selectedItem.toString());
 				int idkm = kmBUS.getKhuyenMaiById(km).getIdKM();
@@ -422,12 +419,15 @@ public class suaHoaDon_Dialog extends JDialog{
 				int idHoaDon = idHD;
 				int soluong = Integer.parseInt(txt_soluong.getText());
 
-				ctHoaDonDTO cthd = new ctHoaDonDTO(soluong, donGia, thanhTien, idkm, idbh, idSanPham, idHoaDon);
+				ctHoaDonDTO cthd = new ctHoaDonDTO(soluong, donGia, IMEI, idkm, idbh, idSanPham, idHoaDon);
 				ctHoaDonBUS.updateCTHoaDon(cthd);
 				int slTon = spBUS.laySanPhamTheoId(idSanPham).getSoLuong();
 				spBUS.capNhatSoLuongTon(idSanPham, slTon + newcthd.getSoLuong() - soluong);
+				IMEIBUS imeiBUS = new IMEIBUS();
+				imeiBUS.updateTrangThaiIMEI(IMEI, idHD);
+				JOptionPane.showMessageDialog(null, "Sửa hóa đơn thành công", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
+				dispose();
 			}
 		});
 	}
 }
-

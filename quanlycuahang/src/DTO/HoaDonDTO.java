@@ -1,6 +1,7 @@
 package DTO;
 
 import java.sql.Date;
+import java.time.LocalDate;
 
 public class HoaDonDTO {
 	private int idHoaDon;

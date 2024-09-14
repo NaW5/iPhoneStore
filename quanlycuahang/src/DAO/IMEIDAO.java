@@ -287,4 +287,24 @@ public class IMEIDAO implements DAOInterface<IMEIDTO> {
         }
         return IMEIList;
     }
+
+    public int updateTrangThaiIMEI(int imei, int maHD) {
+        int ketQua = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            String sql = "UPDATE IMEI " +
+                    "SET trangThai = ? " +
+                    "WHERE maIMEI = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, maHD);
+            pst.setInt(2, imei);
+            ketQua = pst.executeUpdate();
+            System.out.println("Đã thực thi: " + sql);
+            System.out.println("Đã thay đổi " + ketQua + " dòng");
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            Logger.getLogger(IMEIDAO.class.getName()).log(Level.SEVERE, null, e);
+        }
+        return ketQua;
+    }
 }

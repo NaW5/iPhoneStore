@@ -25,6 +25,7 @@ public class xemHoaDon_Dialog extends JDialog {
 	private JTextField txt_tenNV;
 	private JTextField txt_idKH;
 	private JTextField txt_tongtien;
+	private JTextField txt_IMEI;
 	public SanPhamBUS spBUS = new SanPhamBUS();
 	public ctSanPhamBUS ctspBUS = new ctSanPhamBUS();
 	public ctHoaDonBUS cthdBUS = new ctHoaDonBUS();
@@ -117,6 +118,13 @@ public class xemHoaDon_Dialog extends JDialog {
 		txt_soluong.setEnabled(true);
 		txt_soluong.setEditable(false);
 
+		JLabel lbl_IMEI = new JLabel("IMEI");
+		lbl_IMEI.setFont(new Font("Tahoma", Font.PLAIN, 14));
+
+		txt_IMEI = new JTextField(String.valueOf(newcthd.getIMEI()));
+		txt_IMEI.setEnabled(true);
+		txt_IMEI.setEditable(false);
+
 		JButton btn_thoat = new JButton("Thoát");
 		btn_thoat.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -172,11 +180,13 @@ public class xemHoaDon_Dialog extends JDialog {
 								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 										.addComponent(lbl_maSP)
 										.addComponent(lbl_rom)
-										.addComponent(lbl_soluong))
+										.addComponent(lbl_soluong)
+										.addComponent(lbl_IMEI))
 								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 										.addComponent(txt_maSP)
 										.addComponent(txt_rom)
-										.addComponent(txt_soluong))
+										.addComponent(txt_soluong)
+										.addComponent(txt_IMEI))
 								.addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
 										.addComponent(lbl_tenSP)
 										.addComponent(lbl_mauSac)
@@ -227,6 +237,9 @@ public class xemHoaDon_Dialog extends JDialog {
 								.addComponent(cbb_khuyenmai)
 								.addComponent(lbl_KH)
 								.addComponent(txt_idKH))
+						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+								.addComponent(lbl_IMEI)
+								.addComponent(txt_IMEI))
 						.addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
 								.addComponent(lbl_baohanh)
 								.addComponent(cbb_baohanh))
