@@ -150,6 +150,11 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
     public void xoaChiTietPhieuNhapByIMEI(int i) {
         try {
             Connection con = JDBCUtil.getConnection();
+            String updateIMEISql = "UPDATE imei SET idPhieuNhap = NULL WHERE maIMEI = ?";
+            PreparedStatement updateIMEIPst = con.prepareStatement(updateIMEISql);
+            updateIMEIPst.setInt(1, i);
+            updateIMEIPst.executeUpdate();
+
             String sql = "DELETE FROM ctphieunhapkho WHERE IMEI = ?";
             PreparedStatement pst = con.prepareStatement(sql);
             pst.setInt(1, i);
@@ -181,26 +186,17 @@ public class ChiTietPhieuNhapDAO implements ChiTietInterface<ChiTietPhieuNhapDTO
         try {
             Connection con = JDBCUtil.getConnection();
 
-            // Step 1: Retrieve all IMEI records associated with the given idPhieuNhap
-            String selectIMEISql = "SELECT maIMEI FROM imei WHERE idPhieuNhap = ?";
-            PreparedStatement selectIMEIPst = con.prepareStatement(selectIMEISql);
-            selectIMEIPst.setInt(1, i);
-            ResultSet rs = selectIMEIPst.executeQuery();
+            // Step 1: update idPhieuNhap in imei table to null
+            String updateIMEISql = "UPDATE imei SET idPhieuNhap = NULL WHERE idPhieuNhap = ?";
+            PreparedStatement updateIMEIPst = con.prepareStatement(updateIMEISql);
+            updateIMEIPst.setInt(1, i);
+            updateIMEIPst.executeUpdate();
 
-            // Step 2: Delete these IMEI records
-            String deleteIMEISql = "DELETE FROM imei WHERE maIMEI = ?";
-            PreparedStatement deleteIMEIPst = con.prepareStatement(deleteIMEISql);
-            while (rs.next()) {
-                int imei = rs.getInt("maIMEI");
-                deleteIMEIPst.setInt(1, imei);
-                deleteIMEIPst.executeUpdate();
-            }
-
-            // Step 3: Delete all ChiTietPhieuNhap records associated with the given idPhieuNhap
-            String deleteChiTietSql = "DELETE FROM ctphieunhapkho WHERE PHIEUNHAP_idPhieuNhap = ?";
-            PreparedStatement deleteChiTietPst = con.prepareStatement(deleteChiTietSql);
-            deleteChiTietPst.setInt(1, i);
-            deleteChiTietPst.executeUpdate();
+            //step 2: delete from ctphieunhapkho
+            String sql = "DELETE FROM ctphieunhapkho WHERE PHIEUNHAP_idPhieuNhap = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, i);
+            pst.executeUpdate();
 
             JDBCUtil.closeConnection(con);
         } catch (SQLException ex) {

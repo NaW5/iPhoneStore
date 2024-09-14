@@ -318,7 +318,7 @@ public class ThemPhieuNhap extends JPanel {
             Object[] rowData = {idSanPham, tenSanPham, giaNhap, mauSac, ram, rom, imei};
             //kiểm tra imei có trùng với các imei cũ đang có ở trong bảng không kể cả những imei đã thêm trước đó?
             ctPhieuNhapBUS ctpnBUS = new ctPhieuNhapBUS();
-            if (ctpnBUS.kiemTraTonTaiIMEI(Integer.parseInt(imei))) {
+            if (kiemTraTonTaiIMEITrongBang(imei)) {
                 JOptionPane.showMessageDialog(null, "IMEI đã tồn tại!");
                 return;
             }
@@ -338,6 +338,16 @@ public class ThemPhieuNhap extends JPanel {
         }
 
         lb_TongTien.setText("Tổng tiền: " + String.format("%,.0f", tongTien));
+    }
+
+    private boolean kiemTraTonTaiIMEITrongBang(String imei) {
+        DefaultTableModel model = (DefaultTableModel) table_sanPham.getModel();
+        for (int i = 0; i < model.getRowCount(); i++) {
+            if (model.getValueAt(i, 6).toString().equals(imei)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private void chonSanPham(){
@@ -440,5 +450,15 @@ public class ThemPhieuNhap extends JPanel {
             }
         }
         JOptionPane.showMessageDialog(null, "Nhập hàng thành công!");
+        updateSoLuongSanPham();
+    }
+
+    private void updateSoLuongSanPham() {
+        SanPhamBUS sanPhamBUS = new SanPhamBUS();
+        ArrayList<SanPhamDTO> sanPhamList = sanPhamBUS.layDanhSachSanPham();
+        for (SanPhamDTO sanPham : sanPhamList) {
+            int soLuongTrongCTPN = sanPhamBUS.laySoLuongSanPhamTrongCTPN(sanPham.getIdSP());
+            sanPhamBUS.capNhatSoLuongTon(sanPham.getIdSP(), soLuongTrongCTPN);
+        }
     }
 }

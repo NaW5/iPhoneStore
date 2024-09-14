@@ -83,4 +83,7 @@ public ArrayList<SanPhamDTO> search(String text) {
         return sanPhamDAO.selectALLChiTiet();
     }
 
+    public int laySoLuongSanPhamTrongCTPN(int idSP) {
+        return sanPhamDAO.selectSoLuongSanPhamTrongCTPN(idSP);
+    }
 }

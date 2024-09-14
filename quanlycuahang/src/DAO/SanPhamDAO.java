@@ -271,4 +271,22 @@ public class SanPhamDAO implements DAOInterface<SanPhamDTO> {
     }
 
 
+    public int selectSoLuongSanPhamTrongCTPN(int idSP) {
+        int soLuong = 0;
+        try {
+            Connection con = JDBCUtil.getConnection();
+            // Count the number of rows where SANPHAM_idSP matches the given idSP
+            String sql = "SELECT COUNT(*) AS soLuong FROM ctphieunhapkho WHERE SANPHAM_idSP = ?";
+            PreparedStatement pst = con.prepareStatement(sql);
+            pst.setInt(1, idSP);
+            ResultSet rs = pst.executeQuery();
+            if (rs.next()) {
+                soLuong = rs.getInt("soLuong");
+            }
+            JDBCUtil.closeConnection(con);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return soLuong;
+    }
 }
