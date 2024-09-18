@@ -45,7 +45,7 @@ public class suaSanPham_Dialog extends JDialog{
 		ctSanPhamDTO ctspdto = ctSanPhamDAO.getInstance().selectById(idSP);
 		getContentPane().setLayout(null);
 		JLabel lbl_hinhAnh = new JLabel("");
-		lbl_hinhAnh.setIcon(new ImageIcon("C:\\Users\\Smile\\eclipse-workspace\\MobileStore\\" + spdto.getHinhAnh()));
+		lbl_hinhAnh.setIcon(new ImageIcon("img\\" + spdto.getHinhAnh()));
 		lbl_hinhAnh.setBounds(79, 90, 221, 272);
 		getContentPane().add(lbl_hinhAnh);
 		JLabel lbl_suasp = new JLabel("SỬA SẢN PHẨM " + String.valueOf(idSP));

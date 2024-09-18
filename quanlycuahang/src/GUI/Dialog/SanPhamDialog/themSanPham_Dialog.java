@@ -15,6 +15,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -217,7 +218,8 @@ public class themSanPham_Dialog extends JDialog{
 					JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
 				}
 				else {
-					int idsp = SanPhamDAO.getInstance().selectAllAll().get(SanPhamDAO.getInstance().selectAllAll().size()-1).getIdSP() +1;
+					ArrayList<SanPhamDTO> sps = SanPhamDAO.getInstance().selectAllAll();
+					int idsp = sps.isEmpty() ? 1 : sps.getLast().getIdSP() + 1;
 					String tensp = txt_tensp.getText();
 					int giaNhap = Integer.parseInt(txt_gianhap.getText());
 					int giaBan = Integer.parseInt(txt_giaban.getText());
@@ -258,11 +260,12 @@ public class themSanPham_Dialog extends JDialog{
 
 
 	public themSanPham_Dialog(int idSP) {
+		setModal(true);
 		SanPhamDTO spdto = spBUS.laySanPhamTheoId(idSP);
 		ctSanPhamDTO ctspdto = ctspBUS.timctSanPhamTheoId(idSP);
 		getContentPane().setLayout(null);
 		JLabel lbl_hinhAnh = new JLabel("");
-		lbl_hinhAnh.setIcon(new ImageIcon("C:\\Users\\Smile\\eclipse-workspace\\MobileStore\\" + spdto.getHinhAnh()));
+		lbl_hinhAnh.setIcon(new ImageIcon("img\\" + spdto.getHinhAnh()));
 		lbl_hinhAnh.setBounds(60, 89, 240, 272);
 		getContentPane().add(lbl_hinhAnh);
 		JLabel lbl_themsp = new JLabel("THÊM IMEI MỚI VÀO SẢN PHẨM " + String.valueOf(idSP));

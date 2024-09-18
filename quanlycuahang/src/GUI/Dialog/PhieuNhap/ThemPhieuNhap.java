@@ -233,6 +233,7 @@ public class ThemPhieuNhap extends JPanel {
                 themSanPham_Dialog themSanPham = new themSanPham_Dialog(idSP);
                 themSanPham.setSize(1200, 500);
                 themSanPham.setVisible(true);
+                updateIMEIcbb(idSP);
             }
         });
 
@@ -242,6 +243,10 @@ public class ThemPhieuNhap extends JPanel {
         panel_2.add(btn_themSanPham);
         btn_themSanPham.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
+                if(textField_giaNhap.getText().equals("0")) {
+                    JOptionPane.showMessageDialog(null, "Vui  lòng nhập giá tiền");
+                    return;
+                }
                 themTableSanPham();
             }
         });
@@ -334,6 +339,7 @@ public class ThemPhieuNhap extends JPanel {
                 tongTien += tongTienHang;
             } catch (NumberFormatException e) {
                 JOptionPane.showMessageDialog(null, "Giá nhập không hợp lệ!");
+                return;
             }
         }
 
@@ -367,12 +373,7 @@ public class ThemPhieuNhap extends JPanel {
             textField_giaNhap.setText(String.valueOf(giaNhap));
 
             // Load IMEI codes for the selected product
-            IMEIBUS imeiBUS = new IMEIBUS();
-            ArrayList<IMEIDTO> imeiList = imeiBUS.layDanhSachIMEITheoSanPhamChuaNhap(idSP, Integer.parseInt(textField_IdPhieuNhap.getText()));
-            comboBox_IMEI.removeAllItems();
-            for (IMEIDTO imei : imeiList) {
-                comboBox_IMEI.addItem(String.valueOf(imei.getMaIMEI()));
-            }
+            updateIMEIcbb(idSP);
         }
     }
 
@@ -459,6 +460,15 @@ public class ThemPhieuNhap extends JPanel {
         for (SanPhamDTO sanPham : sanPhamList) {
             int soLuongTrongCTPN = sanPhamBUS.laySoLuongSanPhamTrongCTPN(sanPham.getIdSP());
             sanPhamBUS.capNhatSoLuongTon(sanPham.getIdSP(), soLuongTrongCTPN);
+        }
+    }
+
+    private void updateIMEIcbb(int idSP) {
+        IMEIBUS imeiBUS = new IMEIBUS();
+        ArrayList<IMEIDTO> imeiList = imeiBUS.layDanhSachIMEITheoSanPhamChuaNhap(idSP, Integer.parseInt(textField_IdPhieuNhap.getText()));
+        comboBox_IMEI.removeAllItems();
+        for (IMEIDTO imei : imeiList) {
+            comboBox_IMEI.addItem(String.valueOf(imei.getMaIMEI()));
         }
     }
 }

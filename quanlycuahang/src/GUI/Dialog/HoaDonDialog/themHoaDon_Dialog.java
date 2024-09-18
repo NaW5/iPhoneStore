@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Array;
 import java.sql.Date;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
@@ -166,7 +167,8 @@ public class themHoaDon_Dialog extends JDialog{
 		lbl_maHD.setBounds(907, 77, 94, 14);
 		getContentPane().add(lbl_maHD);
 
-		int maHD = hoaDonBUS.getAllHoaDon().get(hoaDonBUS.getAllHoaDon().size()-1).getIdHoaDon() + 1;
+		ArrayList<HoaDonDTO> hds = hoaDonBUS.getAllHoaDon();
+		int maHD = hds.isEmpty() ? 1 : hds.getLast().getIdHoaDon() + 1;
 		txt_maHD = new JTextField(String.valueOf(maHD));
 		txt_maHD.setColumns(10);
 		txt_maHD.setBounds(907, 103, 94, 27);

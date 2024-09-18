@@ -29,7 +29,7 @@ public class xemthongtinSanPham_Dialog extends JDialog{
 		ctSanPhamDTO ctspdto = ctSanPhamDAO.getInstance().selectById(idSP);
 		getContentPane().setLayout(null);
 		JLabel lbl_hinhAnh = new JLabel("");
-		lbl_hinhAnh.setIcon(new ImageIcon("D:\\University\\Second year\\2nd Semester\\Java\\DoAn_Java\\img\\" + spdto.getHinhAnh()));
+		lbl_hinhAnh.setIcon(new ImageIcon("img\\" + spdto.getHinhAnh()));
 		lbl_hinhAnh.setBounds(35, 117, 268, 308);
 		getContentPane().add(lbl_hinhAnh);
 		JLabel lbl_suasp = new JLabel("THÔNG TIN SẢN PHẨM " + String.valueOf(idSP));
