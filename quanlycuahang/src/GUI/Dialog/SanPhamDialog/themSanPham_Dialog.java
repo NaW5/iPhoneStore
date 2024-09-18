@@ -91,30 +91,22 @@ public class themSanPham_Dialog extends JDialog{
 		lbl_gianhap.setBounds(384, 141, 93, 14);
 		getContentPane().add(lbl_gianhap);
 
-		txt_gianhap = new JTextField();
+		txt_gianhap = new JTextField("0");
 		txt_gianhap.setColumns(10);
 		txt_gianhap.setBounds(384, 166, 129, 30);
 		getContentPane().add(txt_gianhap);
+		txt_gianhap.setEnabled(false);
 
 		JLabel lbl_giaban = new JLabel("Giá bán");
 		lbl_giaban.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lbl_giaban.setBounds(384, 221, 93, 14);
 		getContentPane().add(lbl_giaban);
 
-		txt_giaban = new JTextField();
+		txt_giaban = new JTextField("0");
 		txt_giaban.setColumns(10);
 		txt_giaban.setBounds(384, 246, 129, 30);
 		getContentPane().add(txt_giaban);
-
-		JLabel lbl_IMEI = new JLabel("Mã IMEI");
-		lbl_IMEI.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		lbl_IMEI.setBounds(384, 307, 93, 14);
-		getContentPane().add(lbl_IMEI);
-
-		JTextField txt_IMEI = new JTextField();
-		txt_IMEI.setColumns(10);
-		txt_IMEI.setBounds(384, 331, 129, 30);
-		getContentPane().add(txt_IMEI);
+		txt_giaban.setEnabled(false);
 
 		JLabel lbl_mausac = new JLabel("Màu sắc");
 		lbl_mausac.setFont(new Font("Tahoma", Font.PLAIN, 12));
@@ -221,7 +213,7 @@ public class themSanPham_Dialog extends JDialog{
 				else if(!isNumeric(txt_giaban.getText())) {
 					JOptionPane.showMessageDialog(null, "Giá bán phải là số");
 				}
-				else if(txt_chip.getText().equals("") || txt_pin.getText().equals("") || txt_hdh.getText().equals("") || txt_camerasau.getText().equals("") || txt_cameratruoc.getText().equals("") || imagePath.equals("") || txt_IMEI.getText().equals("")) {
+				else if(txt_chip.getText().equals("") || txt_pin.getText().equals("") || txt_hdh.getText().equals("") || txt_camerasau.getText().equals("") || txt_cameratruoc.getText().equals("") || imagePath.equals("")) {
 					JOptionPane.showMessageDialog(null, "Vui lòng nhập đầy đủ thông tin");
 				}
 				else {
@@ -245,10 +237,8 @@ public class themSanPham_Dialog extends JDialog{
 					int SANPHAM_idSP = idsp;
 					ctSanPhamDTO ctspdto = new ctSanPhamDTO(chip, pin, manHinh, hdh, cameraSau, cameraTruoc, ram, rom, SANPHAM_idSP);
 					ctspBUS.themctSanPham(ctspdto);
-
-					int maIMEI = Integer.parseInt(txt_IMEI.getText());
-					IMEIDTO imei = new IMEIDTO(maIMEI, idsp);
-					imeiBUS.themIMEI(imei);
+					//thêm thành công
+					JOptionPane.showMessageDialog(null, "Thêm sản phẩm thành công.");
 				}
 			}
 		});

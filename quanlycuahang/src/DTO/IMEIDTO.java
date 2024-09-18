@@ -61,5 +61,6 @@ public class IMEIDTO {
 		this.maIMEI = maIMEI2;
 		this.idPhieuNhap = NULL;
 		this.SANPHAM_idSP = idsp;
+		this.trangThai = 0;
 	}
 }

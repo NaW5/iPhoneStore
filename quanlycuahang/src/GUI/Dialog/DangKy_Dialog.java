@@ -183,7 +183,6 @@ public class DangKy_Dialog extends JDialog {
 		ArrayList<TaiKhoanDTO> tkList = tkBUS.selectAll();
 		boolean flagNV = false;
 		boolean flagTK = true;
-		boolean flagUsername = true;
 
 		for (NhanVienDTO nv : nvList) {
 			if (nv.getIdNV() == idNV) {
@@ -207,8 +206,7 @@ public class DangKy_Dialog extends JDialog {
 			String userName = txt_username.getText();
 			String password = passwordField.getText();
 			int trangThai = 1;
-			String chucVu = "Nhân viên quản lí";
-			TaiKhoanDTO tk = new TaiKhoanDTO(userName, password, trangThai, chucVu, idNV);
+			TaiKhoanDTO tk = new TaiKhoanDTO(userName, password, trangThai, idNV);
 			tkBUS.insert(tk);
 			JOptionPane.showMessageDialog(null, "Đăng ký thành công!", "Thông báo", JOptionPane.INFORMATION_MESSAGE);
 			//close the dialog
